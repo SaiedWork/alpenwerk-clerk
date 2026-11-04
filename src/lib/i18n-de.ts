@@ -27,6 +27,28 @@ export const t = {
         city: "PLZ / Ort",
       },
     },
+    form: {
+      save: "Speichern",
+      cancel: "Abbrechen",
+      invalid: "Eingabe fehlt oder ist ungültig:",
+      backToPolicy: "Zurück zur Police",
+      changed: "Die Änderung wurde gespeichert.",
+      unchanged: "Keine Änderung: Die Daten waren bereits aktuell.",
+      newValues: "Aktuelle Daten",
+      noMandate:
+        "Kein aktives SEPA-Mandat vorhanden. Bankverbindung kann nicht geändert werden.",
+      addressTitle: "Adresse ändern",
+      bankTitle: "Bankverbindung ändern",
+      fields: {
+        strasse: "Straße",
+        hausnr: "Hausnummer",
+        plz: "PLZ",
+        ort: "Ort",
+        land: "Land",
+        iban: "IBAN",
+        kontoinhaber: "Kontoinhaber",
+      },
+    },
     policy: {
       title: "Police",
       notFound: "Police nicht gefunden.",
