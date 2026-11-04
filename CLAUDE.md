@@ -13,6 +13,9 @@ pnpm lint         # eslint
 pnpm test         # vitest run (tests/ and evals/)
 pnpm format       # prettier --write
 pnpm format:check # prettier --check
+pnpm db:generate  # drizzle-kit: create a migration from src/db/schema changes
+pnpm db:migrate   # apply migrations in drizzle/ to the database in .env.local
+pnpm db:studio    # drizzle studio
 ```
 
 Node 22+ and pnpm are required. Add new scripts here when they are introduced.
@@ -20,8 +23,8 @@ Node 22+ and pnpm are required. Add new scripts here when they are introduced.
 ## Stack
 
 Next.js (App Router, `src/` dir), React, TypeScript strict, Tailwind 4, shadcn/ui (`base-nova` style, Base UI primitives,
-add components with `pnpm dlx shadcn@latest add <name>`). Planned: Drizzle + Neon Postgres, Vercel AI SDK, Playwright,
-Vitest, Zod.
+add components with `pnpm dlx shadcn@latest add <name>`), Drizzle ORM (stable 0.45) + Neon Postgres, Vitest, Zod.
+Planned: Vercel AI SDK, Playwright.
 
 ## Structure
 
@@ -29,6 +32,7 @@ Vitest, Zod.
 - `src/features/<feature>/{components,server,schemas}` feature code.
 - `src/agent/` pipeline, steps, llm, rules, executor, templates.
 - `src/legacy/` mock legacy admin system. `src/agent/**` must never import from it or from `src/db/schema/legacy*` (enforced by an ESLint `no-restricted-imports` rule).
+- `src/db/` Drizzle schemas (`schema/app.ts`, `schema/legacy.ts`, one Postgres schema each), `getDb()` (HTTP driver, queries) and `withTransaction()` (WebSocket driver, interactive transactions). Migrations live in `drizzle/` and are committed; change a schema, then run `pnpm db:generate`. Local `.env.local` points at the Neon `dev` branch, never at production.
 - `src/lib/` small shared utilities (env, logger, normalization, dates). Read config through `env` from `src/lib/env.ts`, never `process.env`; log through `logger` / `caseLogger`.
 - `tests/` mirrors `src/`.
 
