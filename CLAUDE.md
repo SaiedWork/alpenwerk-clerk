@@ -28,7 +28,7 @@ Vitest, Zod.
 - `src/app/` routes only; route files compose feature components (`page.tsx` stays around 30 lines).
 - `src/features/<feature>/{components,server,schemas}` feature code.
 - `src/agent/` pipeline, steps, llm, rules, executor, templates.
-- `src/legacy/` mock legacy admin system. `src/agent/**` must never import from it.
+- `src/legacy/` mock legacy admin system. `src/agent/**` must never import from it or from `src/db/schema/legacy*` (enforced by an ESLint `no-restricted-imports` rule).
 - `src/lib/` small shared utilities (env, logger, normalization, dates). Read config through `env` from `src/lib/env.ts`, never `process.env`; log through `logger` / `caseLogger`.
 - `tests/` mirrors `src/`.
 
