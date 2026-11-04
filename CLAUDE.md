@@ -16,8 +16,9 @@ Node 22+ and pnpm are required. Add new scripts here when they are introduced.
 
 ## Stack
 
-Next.js (App Router, `src/` dir), React, TypeScript strict, Tailwind. Planned: shadcn/ui, Drizzle + Neon Postgres,
-Vercel AI SDK, Playwright, Vitest, Zod.
+Next.js (App Router, `src/` dir), React, TypeScript strict, Tailwind 4, shadcn/ui (`base-nova` style, Base UI primitives,
+add components with `pnpm dlx shadcn@latest add <name>`). Planned: Drizzle + Neon Postgres, Vercel AI SDK, Playwright,
+Vitest, Zod.
 
 ## Structure
 
