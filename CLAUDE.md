@@ -10,6 +10,9 @@ pnpm dev          # dev server on http://localhost:3000
 pnpm build        # production build
 pnpm typecheck    # tsc --noEmit
 pnpm lint         # eslint
+pnpm test         # vitest run (tests/ and evals/)
+pnpm format       # prettier --write
+pnpm format:check # prettier --check
 ```
 
 Node 22+ and pnpm are required. Add new scripts here when they are introduced.
@@ -26,7 +29,7 @@ Vitest, Zod.
 - `src/features/<feature>/{components,server,schemas}` feature code.
 - `src/agent/` pipeline, steps, llm, rules, executor, templates.
 - `src/legacy/` mock legacy admin system. `src/agent/**` must never import from it.
-- `src/lib/` small shared utilities (env, logger, normalization, dates).
+- `src/lib/` small shared utilities (env, logger, normalization, dates). Read config through `env` from `src/lib/env.ts`, never `process.env`; log through `logger` / `caseLogger`.
 - `tests/` mirrors `src/`.
 
 ## Code conventions
