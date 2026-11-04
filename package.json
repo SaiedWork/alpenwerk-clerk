@@ -10,12 +10,13 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "format": "prettier --write src tests *.json *.ts *.mts *.mjs CLAUDE.md",
-    "format:check": "prettier --check src tests *.json *.ts *.mts *.mjs CLAUDE.md",
+    "format": "prettier --write src tests seed scripts *.json *.ts *.mts *.mjs CLAUDE.md",
+    "format:check": "prettier --check src tests seed scripts *.json *.ts *.mts *.mjs CLAUDE.md",
     "spike": "tsx --tsconfig tsconfig.json scripts/spike-browser.mts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:reset": "tsx --tsconfig tsconfig.json --env-file-if-exists=.env.local scripts/db-reset.mts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

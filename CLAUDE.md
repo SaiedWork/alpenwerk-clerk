@@ -16,6 +16,7 @@ pnpm format:check # prettier --check
 pnpm db:generate  # drizzle-kit: create a migration from src/db/schema changes
 pnpm db:migrate   # apply migrations in drizzle/ to the database in .env.local
 pnpm db:studio    # drizzle studio
+pnpm db:reset     # wipe and reseed app + legacy data (not llm_cache) on the .env.local database
 ```
 
 Node 22+ and pnpm are required. Add new scripts here when they are introduced.
@@ -32,7 +33,7 @@ Planned: Vercel AI SDK, Playwright.
 - `src/features/<feature>/{components,server,schemas}` feature code.
 - `src/agent/` pipeline, steps, llm, rules, executor, templates.
 - `src/legacy/` mock legacy admin system. `src/agent/**` must never import from it or from `src/db/schema/legacy*` (enforced by an ESLint `no-restricted-imports` rule).
-- `src/db/` Drizzle schemas (`schema/app.ts`, `schema/legacy.ts`, one Postgres schema each), `getDb()` (HTTP driver, queries) and `withTransaction()` (WebSocket driver, interactive transactions). Migrations live in `drizzle/` and are committed; change a schema, then run `pnpm db:generate`. Local `.env.local` points at the Neon `dev` branch, never at production.
+- `src/db/` Drizzle schemas (`schema/app.ts`, `schema/legacy.ts`, one Postgres schema each), `getDb()` (HTTP driver, queries) and `withTransaction()` (WebSocket driver, interactive transactions). Seed fixtures are in `seed/` (dates relative to "now"); `resetDatabase()` truncates and reseeds in one transaction. Migrations live in `drizzle/` and are committed; change a schema, then run `pnpm db:generate`. Local `.env.local` points at the Neon `dev` branch, never at production.
 - `src/lib/` small shared utilities (env, logger, normalization, dates). Read config through `env` from `src/lib/env.ts`, never `process.env`; log through `logger` / `caseLogger`.
 - `tests/` mirrors `src/`.
 
