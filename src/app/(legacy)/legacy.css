@@ -1,0 +1,134 @@
+/* Deliberately old-fashioned: beige/gray, small system fonts, tables, tiny buttons. */
+html {
+  background: #c8c4b8;
+}
+body {
+  margin: 0;
+  padding: 12px 0;
+  font:
+    12px/1.4 Verdana,
+    Tahoma,
+    Arial,
+    sans-serif;
+  color: #000;
+}
+a {
+  color: #00259a;
+}
+.page {
+  width: 860px;
+  margin: 0 auto;
+  background: #ece9d8;
+  border: 2px solid #7a7768;
+}
+.header {
+  background: #3b4a6b;
+  color: #fff;
+  font:
+    bold 14px Verdana,
+    Tahoma,
+    Arial,
+    sans-serif;
+  padding: 6px 10px;
+}
+.banner {
+  background: #ffffcc;
+  border-bottom: 1px solid #b5b07a;
+  padding: 3px 10px;
+  font-size: 11px;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #d4d0c0;
+  border-bottom: 1px solid #7a7768;
+  padding: 3px 10px;
+}
+.nav-spacer {
+  flex: 1;
+}
+.nav form {
+  margin: 0;
+}
+.content {
+  padding: 10px;
+}
+h1 {
+  font:
+    bold 13px Verdana,
+    Tahoma,
+    Arial,
+    sans-serif;
+  margin: 0 0 8px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #7a7768;
+}
+h2 {
+  font:
+    bold 12px Verdana,
+    Tahoma,
+    Arial,
+    sans-serif;
+  background: #d4d0c0;
+  border: 1px solid #a6a392;
+  margin: 12px 0 4px;
+  padding: 2px 6px;
+}
+input[type="text"],
+input[type="password"],
+input[type="search"] {
+  font:
+    11px Verdana,
+    Tahoma,
+    Arial,
+    sans-serif;
+  border: 2px inset #a6a392;
+  padding: 1px 3px;
+  width: 220px;
+}
+button,
+.btn {
+  font:
+    11px Verdana,
+    Tahoma,
+    Arial,
+    sans-serif;
+  background: #d4d0c0;
+  border: 2px outset #fff;
+  padding: 0 8px;
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th,
+td {
+  border: 1px solid #a6a392;
+  padding: 2px 6px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background: #d4d0c0;
+}
+table.form th {
+  width: 190px;
+  font-weight: normal;
+}
+.error {
+  color: #a00000;
+  font-weight: bold;
+  margin: 0 0 8px;
+}
+.muted {
+  color: #5a5848;
+}
+.actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 6px;
+}

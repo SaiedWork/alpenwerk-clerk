@@ -28,6 +28,8 @@ const envSchema = z.object({
   LEGACY_BASE_URL: z.url().default("http://localhost:3000/legacy"),
   LEGACY_USER: optionalString,
   LEGACY_PASSWORD: optionalString,
+  // Signs the legacy login cookie. Min. 32 chars; generate with `openssl rand -hex 32`.
+  LEGACY_SESSION_SECRET: z.string().min(32).optional(),
   BROWSER_WS_ENDPOINT: optionalString,
 });
 
