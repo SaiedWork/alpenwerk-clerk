@@ -11,6 +11,7 @@ pnpm build        # production build
 pnpm typecheck    # tsc --noEmit
 pnpm lint         # eslint
 pnpm test         # vitest run (tests/ and evals/)
+pnpm eval         # replay eval report (needs seed/llm-cache.json; skipped without it)
 pnpm format       # prettier --write
 pnpm format:check # prettier --check
 pnpm db:generate  # drizzle-kit: create a migration from src/db/schema changes

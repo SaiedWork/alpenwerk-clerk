@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "eval": "vitest run evals/run.test.ts",
     "format": "prettier --write src tests evals seed scripts *.json *.ts *.mts *.mjs CLAUDE.md",
     "format:check": "prettier --check src tests evals seed scripts *.json *.ts *.mts *.mjs CLAUDE.md",
     "spike": "tsx --tsconfig tsconfig.json scripts/spike-browser.mts",
