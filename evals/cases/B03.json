@@ -1,0 +1,21 @@
+{
+  "id": "B03",
+  "policyFixture": "rezaei",
+  "email": {
+    "from": "shirin.rezaei@example.org",
+    "subject": "Bankverbindung ändern, AW-100105",
+    "body": "Sehr geehrte Damen und Herren,\n\nbitte verwenden Sie für den Einzug meiner Beiträge ab nächstem Monat diese Bankverbindung:\n\nIBAN: DE12 5001 0517 0648 4898 91\nKontoinhaberin: Shirin Rezaei\n\nMeine Versicherungsnummer lautet AW-100105.\n\nMit freundlichen Grüßen\nShirin Rezaei"
+  },
+  "expected": {
+    "intent": "bank_change",
+    "decision": "REPLY_ONLY",
+    "reasonCodes": ["BANK_IBAN_INVALID"]
+  },
+  "expectedFields": {
+    "policyNo": "AW-100105",
+    "senderName": "Shirin Rezaei",
+    "iban": "DE12500105170648489891",
+    "accountHolder": "Shirin Rezaei"
+  },
+  "notes": "Last digit changed, so the ISO 13616 mod-97 check fails. The model must copy the IBAN as written, never 'fix' it."
+}

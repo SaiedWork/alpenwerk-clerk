@@ -1,0 +1,22 @@
+{
+  "id": "B07",
+  "policyFixture": "oeztuerk",
+  "email": {
+    "from": "k.oeztuerk@example.org",
+    "subject": "Umzug und neues Konto",
+    "body": "Guten Tag,\n\nich ziehe zum Monatsende um und wechsle gleichzeitig meine Bank. Bitte ändern Sie beides für die Police AW-100107:\n\nNeue Adresse: Goethestraße 21, 60313 Frankfurt am Main\nNeue IBAN: DE83 4306 0967 0012 3456 78 (Inhaberin: Katharina Öztürk)\n\nVielen Dank im Voraus.\n\nKatharina Öztürk"
+  },
+  "expected": {
+    "intent": "bank_change",
+    "intents": ["bank_change", "address_change"],
+    "decision": "NEEDS_REVIEW",
+    "reasonCodes": ["MULTI_INTENT_RISK"]
+  },
+  "expectedFields": {
+    "policyNo": "AW-100107",
+    "senderName": "Katharina Öztürk",
+    "iban": "DE83430609670012345678",
+    "accountHolder": "Katharina Öztürk"
+  },
+  "notes": "Bank change combined with an address change in one email. Bank fields are scored because bank_change is the primary intent; the second intent is checked via 'intents'."
+}

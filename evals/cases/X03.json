@@ -1,0 +1,21 @@
+{
+  "id": "X03",
+  "policyFixture": "mueller-schmidt",
+  "email": {
+    "from": "petra.mueller-schmidt@example.org",
+    "subject": "Change of bank account - policy AW-100101",
+    "body": "Dear Sir or Madam,\n\nplease collect my premiums for policy AW-100101 from my new bank account from now on:\n\nIBAN: DE21 7602 6000 0044 5566 77\nAccount holder: Petra Müller-Schmidt\n\nThank you very much.\n\nKind regards,\nPetra Müller-Schmidt"
+  },
+  "expected": {
+    "intent": "bank_change",
+    "decision": "AUTO_EXECUTE",
+    "reasonCodes": []
+  },
+  "expectedFields": {
+    "policyNo": "AW-100101",
+    "senderName": "Petra Müller-Schmidt",
+    "iban": "DE21760260000044556677",
+    "accountHolder": "Petra Müller-Schmidt"
+  },
+  "notes": "English-language bank change, otherwise identical to a clean case."
+}

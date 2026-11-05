@@ -1,0 +1,21 @@
+{
+  "id": "B04",
+  "policyFixture": "wagner-spouse-holder",
+  "email": {
+    "from": "andrea.wagner@example.org",
+    "subject": "Änderung Bankverbindung Police AW-100111",
+    "body": "Guten Tag,\n\nich möchte, dass der Beitrag für meine Police AW-100111 künftig vom neuen Gemeinschaftskonto meines Mannes abgebucht wird.\n\nIBAN: DE42 1203 0000 0011 2233 44\nKontoinhaber: Stefan Wagner\n\nDie Einzugsermächtigung hat er bereits unterschrieben.\n\nViele Grüße\nAndrea Wagner"
+  },
+  "expected": {
+    "intent": "bank_change",
+    "decision": "NEEDS_REVIEW",
+    "reasonCodes": ["BANK_HOLDER_MISMATCH"]
+  },
+  "expectedFields": {
+    "policyNo": "AW-100111",
+    "senderName": "Andrea Wagner",
+    "iban": "DE42120300000011223344",
+    "accountHolder": "Stefan Wagner"
+  },
+  "notes": "Account holder is the spouse, not the policyholder."
+}

@@ -1,0 +1,24 @@
+{
+  "id": "A04",
+  "policyFixture": "rezaei",
+  "email": {
+    "from": "shirin.rezaei@example.org",
+    "subject": "Adresse ändern - Umzug nach Spanien",
+    "body": "Hallo,\n\nich wandere im Januar nach Spanien aus. Meine neue Adresse ist:\n\nCalle de Alcalá 45\n28014 Madrid\nSpanien\n\nBitte für meine Versicherung AW-100105 hinterlegen.\n\nDanke, Shirin Rezaei"
+  },
+  "expected": {
+    "intent": "address_change",
+    "decision": "NEEDS_REVIEW",
+    "reasonCodes": ["ADDR_NON_DE"]
+  },
+  "expectedFields": {
+    "policyNo": "AW-100105",
+    "senderName": "Shirin Rezaei",
+    "street": "Calle de Alcalá",
+    "houseNo": "45",
+    "plz": "28014",
+    "city": "Madrid",
+    "country": "Spanien"
+  },
+  "notes": "Complete address, but outside Germany."
+}

@@ -1,0 +1,24 @@
+{
+  "id": "A02",
+  "policyFixture": "wojcik",
+  "email": {
+    "from": "lukasz.wojcik@example.org",
+    "subject": "Meine neue Adresse",
+    "body": "Guten Tag,\n\nich bin umgezogen. Ab sofort wohne ich in der Rosenstraße in 80331 München. Meine Policennummer: AW-100104.\n\nDanke und viele Grüße\nŁukasz Wójcik"
+  },
+  "expected": {
+    "intent": "address_change",
+    "decision": "REPLY_ONLY",
+    "reasonCodes": ["ADDR_INCOMPLETE"]
+  },
+  "expectedFields": {
+    "policyNo": "AW-100104",
+    "senderName": "Łukasz Wójcik",
+    "street": "Rosenstraße",
+    "houseNo": null,
+    "plz": "80331",
+    "city": "München",
+    "country": null
+  },
+  "notes": "House number missing. The model must return null, not guess."
+}

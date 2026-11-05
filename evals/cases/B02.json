@@ -1,0 +1,21 @@
+{
+  "id": "B02",
+  "policyFixture": "yilmaz",
+  "email": {
+    "from": "ayse.yilmaz@example.org",
+    "subject": "neue Kontonummer für meine Versicherung",
+    "body": "Hi Team,\n\nich hab die Bank gewechselt, könnt ihr die Beiträge bitte ab sofort von meinem neuen Konto abbuchen? Meine Vers.-Nr. ist AW-100103.\n\nde02 1005 0000 0024 2906 61\nKontoinhaberin: Ayşe Yılmaz (also ich)\n\nDanke euch und liebe Grüße\nAyşe Yılmaz"
+  },
+  "expected": {
+    "intent": "bank_change",
+    "decision": "AUTO_EXECUTE",
+    "reasonCodes": []
+  },
+  "expectedFields": {
+    "policyNo": "AW-100103",
+    "senderName": "Ayşe Yılmaz",
+    "iban": "DE02100500000024290661",
+    "accountHolder": "Ayşe Yılmaz"
+  },
+  "notes": "Informal 'ihr' tone, lowercase IBAN with spaces; normalization must strip and uppercase it."
+}

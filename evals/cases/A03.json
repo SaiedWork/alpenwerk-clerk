@@ -1,0 +1,24 @@
+{
+  "id": "A03",
+  "policyFixture": "fischer-irrevocable",
+  "email": {
+    "from": "wolfgang.fischer@example.org",
+    "subject": "Adressänderung AW-100112",
+    "body": "Sehr geehrte Damen und Herren,\n\nmeine neue Anschrift lautet:\n\nRingstraße 8\n5066 Köln\n\nBitte tragen Sie diese für die Police AW-100112 ein.\n\nMit freundlichen Grüßen\nWolfgang Fischer"
+  },
+  "expected": {
+    "intent": "address_change",
+    "decision": "REPLY_ONLY",
+    "reasonCodes": ["ADDR_PLZ_INVALID"]
+  },
+  "expectedFields": {
+    "policyNo": "AW-100112",
+    "senderName": "Wolfgang Fischer",
+    "street": "Ringstraße",
+    "houseNo": "8",
+    "plz": "5066",
+    "city": "Köln",
+    "country": null
+  },
+  "notes": "Four-digit PLZ. The irrevocable-beneficiary flag on this fixture only matters for terminations."
+}
