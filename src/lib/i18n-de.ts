@@ -1,7 +1,19 @@
 // All German UI strings live here (code, comments and logs stay English).
-// Only the legacy section exists so far; the console adds its own later.
+// The legacy section and the rule explanations exist so far; the console adds its own later.
 
 export const t = {
+  // Customer-neutral internal explanations of rule results, shown as "Warum?" in the console.
+  rules: {
+    ID_POLICY_NOT_FOUND:
+      "Die Versicherungsnummer ist im Bestandssystem nicht vorhanden.",
+    ID_NAME_MISMATCH:
+      "Der Absendername stimmt nicht mit dem Namen auf der Police überein.",
+    ID_DOB_MISMATCH:
+      "Das angegebene Geburtsdatum weicht vom hinterlegten Geburtsdatum ab.",
+    ID_POLICY_INACTIVE: "Die Police ist nicht aktiv (ruhend oder storniert).",
+    ID_SENDER_UNKNOWN:
+      "Die Absender-E-Mail-Adresse stimmt nicht mit der hinterlegten Adresse überein.",
+  },
   legacy: {
     systemName: "Alpenwerk Leben AG — Bestandsführung v4.2",
     demoBanner: "Demo-System mit synthetischen Daten",

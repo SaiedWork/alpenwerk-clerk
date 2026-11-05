@@ -1,0 +1,43 @@
+import { t } from "@/lib/i18n-de";
+import { namesMatch } from "@/lib/normalize";
+import type {
+  IdentifyRuleCode,
+  RuleInput,
+  RuleResult,
+  Severity,
+} from "./types";
+
+function result(code: IdentifyRuleCode, severity: Severity): RuleResult {
+  return { code, severity, messageDe: t.rules[code] };
+}
+
+const sameEmail = (a: string, b: string) =>
+  a.trim().toLowerCase() === b.trim().toLowerCase();
+
+/**
+ * Identification rules. Without a policy snapshot only ID_POLICY_NOT_FOUND applies,
+ * because there is nothing to compare against. A missing name or birth date in the email
+ * is not a mismatch: the rules only compare what the customer actually stated.
+ */
+export function identifyRules(input: RuleInput): RuleResult[] {
+  const { snapshot, identity, senderEmail } = input;
+  if (!snapshot) return [result("ID_POLICY_NOT_FOUND", "block")];
+
+  const results: RuleResult[] = [];
+
+  const fullName = `${snapshot.firstName} ${snapshot.lastName}`;
+  if (identity.senderName && !namesMatch(identity.senderName, fullName)) {
+    results.push(result("ID_NAME_MISMATCH", "escalate"));
+  }
+  // A birth date that is not in the normalized ISO form also differs, which is the safe side.
+  if (identity.dateOfBirth && identity.dateOfBirth !== snapshot.dateOfBirth) {
+    results.push(result("ID_DOB_MISMATCH", "escalate"));
+  }
+  if (snapshot.status !== "aktiv") {
+    results.push(result("ID_POLICY_INACTIVE", "escalate"));
+  }
+  if (!sameEmail(senderEmail, snapshot.email)) {
+    results.push(result("ID_SENDER_UNKNOWN", "escalate"));
+  }
+  return results;
+}
