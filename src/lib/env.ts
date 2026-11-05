@@ -11,11 +11,9 @@ const envSchema = z.object({
   DATABASE_URL: optionalString,
   DATABASE_URL_UNPOOLED: optionalString,
 
-  LLM_PROVIDER: z.enum(["anthropic", "ollama", "replay"]).default("replay"),
+  LLM_PROVIDER: z.enum(["anthropic", "replay"]).default("replay"),
   ANTHROPIC_API_KEY: optionalString,
   ANTHROPIC_MODEL: z.string().min(1).default("claude-haiku-5-5"),
-  OLLAMA_BASE_URL: z.url().default("http://localhost:11434"),
-  OLLAMA_MODEL: optionalString,
   LLM_DAILY_CALL_CAP: z.coerce.number().int().positive().default(150),
 
   RATE_LIMIT_LIVE_PER_HOUR: z.coerce.number().int().positive().default(10),
