@@ -25,6 +25,14 @@ export const t = {
     BANK_SAME_IBAN: "Die neue IBAN entspricht der bereits hinterlegten IBAN.",
     BANK_RECENT_ADDRESS_CHANGE:
       "Die Adresse wurde in den letzten 14 Tagen geändert (Betrugsschutz).",
+    TERM_ALWAYS_REVIEW:
+      "Kündigungen werden nie automatisch ausgeführt und immer von einem Menschen geprüft.",
+    TERM_IRREVOCABLE_BENEFICIARY:
+      "Es besteht eine unwiderrufliche Bezugsberechtigung; die Zustimmung des Berechtigten ist nötig.",
+    MULTI_INTENT_RISK:
+      "Die E-Mail enthält eine Bankänderung zusammen mit einem weiteren Anliegen.",
+    OTHER_INTENT:
+      "Das Anliegen ist nicht eindeutig zuzuordnen oder liegt außerhalb des automatisierbaren Bereichs.",
     ID_SENDER_UNKNOWN:
       "Die Absender-E-Mail-Adresse stimmt nicht mit der hinterlegten Adresse überein.",
   },

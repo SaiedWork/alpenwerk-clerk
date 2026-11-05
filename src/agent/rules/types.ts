@@ -25,8 +25,17 @@ export type BankRuleCode =
   | "BANK_SAME_IBAN"
   | "BANK_RECENT_ADDRESS_CHANGE";
 
-/** Grows with every rule group (termination, general). */
-export type RuleCode = IdentifyRuleCode | AddressRuleCode | BankRuleCode;
+export type TerminationRuleCode =
+  "TERM_ALWAYS_REVIEW" | "TERM_IRREVOCABLE_BENEFICIARY";
+
+export type GeneralRuleCode = "MULTI_INTENT_RISK" | "OTHER_INTENT";
+
+export type RuleCode =
+  | IdentifyRuleCode
+  | AddressRuleCode
+  | BankRuleCode
+  | TerminationRuleCode
+  | GeneralRuleCode;
 
 /** One rule outcome. `messageDe` is the German explanation shown in the console. */
 export interface RuleResult {
@@ -50,6 +59,9 @@ export interface LegacySnapshot {
   activeMandate: { iban: string; holder: string } | null;
   /** Time of the latest address change in the change log, `null` if never changed. */
   lastAddressChangeAt: Date | null;
+  irrevocableBeneficiary: boolean;
+  /** Indicative surrender value in EUR as shown in the legacy system, `null` if unknown. */
+  surrenderValueIndicative: number | null;
 }
 
 /** Normalized, Zod-validated values from the LLM. `null` means "not present in the email". */

@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Alps peak logo">
   <defs>
     <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffe3a3"/>
-      <stop offset="1" stop-color="#fff4d9"/>
+      <stop offset="0" stop-color="#e3a64e"/>
+      <stop offset="1" stop-color="#f2c47e"/>
     </linearGradient>
     <clipPath id="shape">
       <rect width="512" height="512" rx="120"/>
@@ -10,15 +10,15 @@
   </defs>
   <g clip-path="url(#shape)">
     <rect width="512" height="512" fill="url(#sky)"/>
-    <circle cx="392" cy="140" r="34" fill="#ffb84d"/>
+    <circle cx="392" cy="140" r="34" fill="#fff1c9"/>
     <!-- back ridges -->
-    <path d="M0 512 V372 L120 262 L250 440 V512 Z" fill="#f2cf94"/>
-    <path d="M512 512 V396 L408 296 L320 512 Z" fill="#f2cf94"/>
+    <path d="M0 512 V372 L120 262 L250 440 V512 Z" fill="#cf9546"/>
+    <path d="M512 512 V396 L408 296 L320 512 Z" fill="#cf9546"/>
     <!-- main peak, lit face -->
-    <path d="M51 512 L255 118 L286 176 L300 202 L270 280 L300 512 Z" fill="#ffffff"/>
+    <path d="M51 512 L255 118 L286 176 L300 202 L270 280 L300 512 Z" fill="#cfd5dd"/>
     <!-- main peak, shadow face -->
     <path d="M255 118 L286 176 L300 202 L485 512 L300 512 L270 280 L300 202 Z" fill="#4a5d7a"/>
     <!-- snow cap -->
-    <path d="M255 118 L224 176 L242 166 L257 190 L271 168 L286 176 Z" fill="#ffffff"/>
+    <path d="M255 118 L224 176 L242 166 L257 190 L271 168 L286 176 Z" fill="#f6f8fb"/>
   </g>
 </svg>

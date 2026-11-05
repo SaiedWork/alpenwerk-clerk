@@ -14,6 +14,8 @@ export const snapshot: LegacySnapshot = {
     holder: "Anna Müller-Schmidt",
   },
   lastAddressChangeAt: null,
+  irrevocableBeneficiary: false,
+  surrenderValueIndicative: 12450.5,
 };
 
 /** A fully matching, rule-clean input; tests override what they exercise. */
