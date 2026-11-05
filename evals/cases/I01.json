@@ -1,0 +1,24 @@
+{
+  "id": "I01",
+  "policyFixture": null,
+  "email": {
+    "from": "sven.albrecht@example.test",
+    "subject": "Adressänderung",
+    "body": "Guten Tag,\n\nich ziehe um. Meine neue Adresse lautet Gartenweg 4, 30159 Hannover. Meine Versicherungsnummer ist AW-999999.\n\nFreundliche Grüße\nSven Albrecht"
+  },
+  "expected": {
+    "intent": "address_change",
+    "decision": "REPLY_ONLY",
+    "reasonCodes": ["ID_POLICY_NOT_FOUND"]
+  },
+  "expectedFields": {
+    "policyNo": "AW-999999",
+    "senderName": "Sven Albrecht",
+    "street": "Gartenweg",
+    "houseNo": "4",
+    "plz": "30159",
+    "city": "Hannover",
+    "country": null
+  },
+  "notes": "Policy number does not exist in the legacy system (no fixture)."
+}

@@ -1,0 +1,21 @@
+{
+  "id": "B01",
+  "policyFixture": "becker",
+  "email": {
+    "from": "thomas.becker@example.org",
+    "subject": "Änderung meiner Bankverbindung – Versicherungsnummer AW-100102",
+    "body": "Sehr geehrte Damen und Herren,\n\nhiermit teile ich Ihnen mit, dass ich mein Girokonto gewechselt habe. Bitte buchen Sie den Beitrag für meine Risikolebensversicherung (Versicherungsnummer AW-100102) künftig von folgendem Konto ab:\n\nIBAN: DE89 3704 0044 0532 0130 00\nKontoinhaber: Thomas Becker\n\nDas bisherige Konto wird in Kürze aufgelöst. Über eine kurze Bestätigung würde ich mich freuen.\n\nMit freundlichen Grüßen\nThomas Becker"
+  },
+  "expected": {
+    "intent": "bank_change",
+    "decision": "AUTO_EXECUTE",
+    "reasonCodes": []
+  },
+  "expectedFields": {
+    "policyNo": "AW-100102",
+    "senderName": "Thomas Becker",
+    "iban": "DE89370400440532013000",
+    "accountHolder": "Thomas Becker"
+  },
+  "notes": "Clean formal bank change; holder equals policyholder; no recent address change."
+}

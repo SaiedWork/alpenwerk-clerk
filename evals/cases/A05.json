@@ -1,0 +1,24 @@
+{
+  "id": "A05",
+  "policyFixture": "mueller-schmidt",
+  "email": {
+    "from": "petra.mueller-schmidt@example.org",
+    "subject": "umzug - bitte adresse aendern",
+    "body": "hallo zusammen,\n\nich bin umgezogn und die Post ging in letzter Zeit noch an die alte Adresse. Neue Anschrift: 50668 Köln, Am Rheinufer 15. Meine Policennummer ist AW-100101 (steht oben auf dem letzten Schreiben von Ihnen).\n\nBitte das schnell ändern, danke!\n\nGruß\nPetra Müller-Schmidt\n\nGesendet von meinem iPhone"
+  },
+  "expected": {
+    "intent": "address_change",
+    "decision": "AUTO_EXECUTE",
+    "reasonCodes": []
+  },
+  "expectedFields": {
+    "policyNo": "AW-100101",
+    "senderName": "Petra Müller-Schmidt",
+    "street": "Am Rheinufer",
+    "houseNo": "15",
+    "plz": "50668",
+    "city": "Köln",
+    "country": null
+  },
+  "notes": "Informal tone, typos, PLZ stated before street. Country is not stated and must stay null."
+}
