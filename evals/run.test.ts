@@ -1,8 +1,12 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { loadEvalCases } from "./loader";
 import { createMemoryStores, readSeedCache } from "./memory-stores";
 import { formatReport } from "./report";
 import { runEvals } from "./run";
+
+vi.mock("@/lib/logger", () => ({
+  logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+}));
 
 const entries = readSeedCache();
 

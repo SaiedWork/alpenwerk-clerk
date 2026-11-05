@@ -1,0 +1,454 @@
+[
+  {
+    "key": "00479d508a54e2944ef7366f054ad56882477815a22f91fcdcc783fd4e2a2e49",
+    "response": {
+      "intents": [
+        "bank_change"
+      ],
+      "confidence": 0.9,
+      "language": "de",
+      "policy_no": "AW-100104",
+      "sender_name": "Łukasz Wójcik",
+      "date_of_birth": null,
+      "primary_intent": "bank_change",
+      "iban": "DE12 5001 0517 0648 4898 90",
+      "account_holder": "Marta Wójcik",
+      "effective_date": null
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "25e80a94ad452430bdb744737667158d31d9f28a351f400f940ca61a29ec91ca",
+    "response": {
+      "intents": [
+        "address_change"
+      ],
+      "confidence": 0.95,
+      "language": "de",
+      "policy_no": "AW-100102",
+      "sender_name": "Thomas Becker",
+      "date_of_birth": null,
+      "primary_intent": "address_change",
+      "strasse": "Birkenstraße",
+      "hausnr": "22",
+      "plz": "40215",
+      "ort": "Düsseldorf",
+      "land": null,
+      "effective_date": "1. des nächsten Monats"
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "319705e8e985914f7d6c5326c3078a6905649392a489c3614e0725928e54967d",
+    "response": {
+      "intents": [
+        "bank_change"
+      ],
+      "confidence": 0.95,
+      "language": "de",
+      "policy_no": "AW-100105",
+      "sender_name": "Shirin Rezaei",
+      "date_of_birth": null,
+      "primary_intent": "bank_change",
+      "iban": "DE12 5001 0517 0648 4898 91",
+      "account_holder": "Shirin Rezaei",
+      "effective_date": null
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "328264af4a4857e6f7c9fb8429191e79167a3701f5fdcc2f8afa11d5a43e0a99",
+    "response": {
+      "intents": [
+        "termination"
+      ],
+      "confidence": 0.95,
+      "language": "de",
+      "policy_no": "AW-100112",
+      "sender_name": "Wolfgang Fischer",
+      "date_of_birth": null,
+      "primary_intent": "termination",
+      "requested_termination_date": "zum Ende des Monats",
+      "reason": "Das Geld brauche ich für eine Anschaffung."
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "33d12fe18b4a3babd6e1814ad6faeedb591399a5002c7f578e3bd89b163f17c0",
+    "response": {
+      "intents": [
+        "bank_change"
+      ],
+      "confidence": 0.97,
+      "language": "de",
+      "policy_no": "AW-100102",
+      "sender_name": "Thomas Becker",
+      "date_of_birth": null,
+      "primary_intent": "bank_change",
+      "iban": "DE89 3704 0044 0532 0130 00",
+      "account_holder": "Thomas Becker",
+      "effective_date": null
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "3f4933e402c78f87881e9a3a045856c8a67548f68482e3baf0205f86b9d94a64",
+    "response": {
+      "intents": [
+        "bank_change"
+      ],
+      "confidence": 0.93,
+      "language": "de",
+      "policy_no": "AW-100103",
+      "sender_name": "Ayşe Yılmaz",
+      "date_of_birth": null,
+      "primary_intent": "bank_change",
+      "iban": "de02 1005 0000 0024 2906 61",
+      "account_holder": "Ayşe Yılmaz",
+      "effective_date": "ab sofort"
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "434770d3f4e5ab720d73cd811daac7c73b76d9f156b491c12b0ef5327b0ad08c",
+    "response": {
+      "intents": [
+        "other"
+      ],
+      "confidence": 0.97,
+      "language": "de",
+      "policy_no": null,
+      "sender_name": null,
+      "date_of_birth": null,
+      "primary_intent": "other",
+      "summary": "Spam-E-Mail mit Gewinnversprechen und Aufforderung, einen Link zu klicken; keine Versicherungsanfrage."
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "4a2177a8baccd137baf4b26a28ac9c6f8fe9040fc37362be862c075795f503da",
+    "response": {
+      "intents": [
+        "address_change"
+      ],
+      "confidence": 0.95,
+      "language": "de",
+      "policy_no": "AW-100103",
+      "sender_name": "Peter Meier",
+      "date_of_birth": null,
+      "primary_intent": "address_change",
+      "strasse": "Mozartstraße",
+      "hausnr": "5",
+      "plz": "50674",
+      "ort": "Köln",
+      "land": null,
+      "effective_date": null
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "699102e3c0171cd209b4129239d309d0572f438688a088c978c06cb32fa748c2",
+    "response": {
+      "intents": [
+        "address_change"
+      ],
+      "confidence": 0.9,
+      "language": "de",
+      "policy_no": "AW-100104",
+      "sender_name": "Łukasz Wójcik",
+      "date_of_birth": null,
+      "primary_intent": "address_change",
+      "strasse": "Rosenstraße",
+      "hausnr": null,
+      "plz": "80331",
+      "ort": "München",
+      "land": null,
+      "effective_date": "Ab sofort"
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "712e3d6c608c3fc6bc68e342963ca82fe7fda58d29da2e14648ddaeaf60611a0",
+    "response": {
+      "intents": [
+        "termination"
+      ],
+      "confidence": 0.95,
+      "language": "de",
+      "policy_no": "AW-100106",
+      "sender_name": "Hans-Jürgen Weiß",
+      "date_of_birth": null,
+      "primary_intent": "termination",
+      "requested_termination_date": "nächstmöglichen Termin",
+      "reason": null
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "75d03ca63720c2118dea905703612812515434ef99ec7df4dbf3eb01f6dcc790",
+    "response": {
+      "intents": [
+        "bank_change"
+      ],
+      "confidence": 0.95,
+      "language": "de",
+      "policy_no": "AW-100113",
+      "sender_name": "Julia Neumann",
+      "date_of_birth": null,
+      "primary_intent": "bank_change",
+      "iban": "DE52 1009 0000 0055 6677 88",
+      "account_holder": "Julia Neumann",
+      "effective_date": null
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "7e8fd6cbed6f0607a2be2c2a07975c122274c0ae72ba21406d385deaebf416ee",
+    "response": {
+      "intents": [
+        "address_change"
+      ],
+      "confidence": 0.93,
+      "language": "de",
+      "policy_no": "AW-100101",
+      "sender_name": "Petra Müller-Schmidt",
+      "date_of_birth": null,
+      "primary_intent": "address_change",
+      "strasse": "Am Rheinufer",
+      "hausnr": "15",
+      "plz": "50668",
+      "ort": "Köln",
+      "land": null,
+      "effective_date": null
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "876292577b47d2bf95748bf4eb76e47ab09d07e0503c37c7a1b89cbec8e31909",
+    "response": {
+      "intents": [
+        "address_change",
+        "bank_change"
+      ],
+      "confidence": 0.93,
+      "language": "de",
+      "policy_no": "AW-100107",
+      "sender_name": "Katharina Öztürk",
+      "date_of_birth": null,
+      "primary_intent": "bank_change",
+      "iban": "DE83 4306 0967 0012 3456 78",
+      "account_holder": "Katharina Öztürk",
+      "effective_date": null
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "9721dc8b851500a2c77869f12a036b33b8ff2bcce378925c61d99648813dd2dc",
+    "response": {
+      "intents": [
+        "bank_change"
+      ],
+      "confidence": 0.95,
+      "language": "de",
+      "policy_no": "AW-100110",
+      "sender_name": "Jürgen Krause",
+      "date_of_birth": null,
+      "primary_intent": "bank_change",
+      "iban": "DE20 2505 0180 0098 7654 32",
+      "account_holder": "Jürgen Krause",
+      "effective_date": "nächsten Fälligkeitstermin"
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "9762fb569013a4bf6db03565b8edbcb29227b451e4a749909e2f1df14cf3d7b5",
+    "response": {
+      "intents": [
+        "address_change"
+      ],
+      "confidence": 0.95,
+      "language": "de",
+      "policy_no": "AW-100114",
+      "sender_name": "Markus Lehmann",
+      "date_of_birth": null,
+      "primary_intent": "address_change",
+      "strasse": "Lindenhof",
+      "hausnr": "3",
+      "plz": "44137",
+      "ort": "Dortmund",
+      "land": null,
+      "effective_date": null
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "9f49e508dbc682cd1337692755e2116c6552b061e87d24cc7423c07cb6c2a70b",
+    "response": {
+      "intents": [
+        "address_change"
+      ],
+      "confidence": 0.95,
+      "language": "de",
+      "policy_no": "AW-999999",
+      "sender_name": "Sven Albrecht",
+      "date_of_birth": null,
+      "primary_intent": "address_change",
+      "strasse": "Gartenweg",
+      "hausnr": "4",
+      "plz": "30159",
+      "ort": "Hannover",
+      "land": null,
+      "effective_date": null
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "ac2faa4d602052b0fee12c062aa36d0f0756e4af0165d7e8f780a7ab19253ef0",
+    "response": {
+      "intents": [
+        "address_change"
+      ],
+      "confidence": 0.95,
+      "language": "de",
+      "policy_no": "AW-100112",
+      "sender_name": "Wolfgang Fischer",
+      "date_of_birth": null,
+      "primary_intent": "address_change",
+      "strasse": "Ringstraße",
+      "hausnr": "8",
+      "plz": "5066",
+      "ort": "Köln",
+      "land": null,
+      "effective_date": null
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "bf86b2084092b407db299ceb6bf86fe58126b05846da6159609e93b7230e5aa9",
+    "response": {
+      "intents": [
+        "bank_change"
+      ],
+      "confidence": 0.9,
+      "language": "de",
+      "policy_no": "AW-100106",
+      "sender_name": "Hans-Jürgen Weiß",
+      "date_of_birth": null,
+      "primary_intent": "bank_change",
+      "iban": "GB82 WEST 1234 5698 7654 32",
+      "account_holder": "Hans-Jürgen Weiß",
+      "effective_date": null
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "cdb4bcf5446e8aa509860f17fb7a76751aff43f0daa9d00884844bb905aa3300",
+    "response": {
+      "intents": [
+        "other"
+      ],
+      "confidence": 0.9,
+      "language": "de",
+      "policy_no": "AW-100104",
+      "sender_name": "Łukasz Wójcik",
+      "date_of_birth": null,
+      "primary_intent": "other",
+      "summary": "Sender asks what payout they would receive if they cancelled policy AW-100104; explicitly states they do not want to terminate yet and are only seeking information."
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "de90aa06e61379bd96a3cb877045d3e993e37a0cfd5047d300198d827c65eb6d",
+    "response": {
+      "intents": [
+        "address_change"
+      ],
+      "confidence": 0.93,
+      "language": "de",
+      "policy_no": "AW-100105",
+      "sender_name": "Shirin Rezaei",
+      "date_of_birth": null,
+      "primary_intent": "address_change",
+      "strasse": "Calle de Alcalá",
+      "hausnr": "45",
+      "plz": "28014",
+      "ort": "Madrid",
+      "land": "Spanien",
+      "effective_date": null
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "df751fca8462e42461679c45abe2c018d31a77a202999d7ca9b741d44bc1fb48",
+    "response": {
+      "intents": [
+        "address_change"
+      ],
+      "confidence": 0.95,
+      "language": "de",
+      "policy_no": "AW-100108",
+      "sender_name": "Michael Schneider",
+      "date_of_birth": null,
+      "primary_intent": "address_change",
+      "strasse": "Gartenstraße",
+      "hausnr": "9",
+      "plz": "70173",
+      "ort": "Stuttgart",
+      "land": null,
+      "effective_date": null
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "e06cb1ad8692f609e4d61962a80d897e514dee7656c87338084a19c58c7a6954",
+    "response": {
+      "intents": [
+        "bank_change"
+      ],
+      "confidence": 0.93,
+      "language": "de",
+      "policy_no": "AW-100111",
+      "sender_name": "Andrea Wagner",
+      "date_of_birth": null,
+      "primary_intent": "bank_change",
+      "iban": "DE42 1203 0000 0011 2233 44",
+      "account_holder": "Stefan Wagner",
+      "effective_date": null
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "ec950e4f6013fb1cb79e57cc4f3818b46a16034ccbedc47330f40e2c35623f6a",
+    "response": {
+      "intents": [
+        "bank_change"
+      ],
+      "confidence": 0.95,
+      "language": "en",
+      "policy_no": "AW-100101",
+      "sender_name": "Petra Müller-Schmidt",
+      "date_of_birth": null,
+      "primary_intent": "bank_change",
+      "iban": "DE21 7602 6000 0044 5566 77",
+      "account_holder": "Petra Müller-Schmidt",
+      "effective_date": null
+    },
+    "model": "claude-haiku-5-5"
+  },
+  {
+    "key": "fdf2d39ab11fef6fb57965a929df975280cff53d01703aaf0f5c0f3dfa70af70",
+    "response": {
+      "intents": [
+        "other"
+      ],
+      "confidence": 0.9,
+      "language": "de",
+      "policy_no": "AW-100107",
+      "sender_name": "Katharina Öztürk",
+      "date_of_birth": null,
+      "primary_intent": "other",
+      "summary": "Kundin beschwert sich über fehlende Antwort auf einen Brief zu Police AW-100107 und über Weiterverbindungen sowie Trennung am Telefon."
+    },
+    "model": "claude-haiku-5-5"
+  }
+]

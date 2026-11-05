@@ -11,7 +11,9 @@ pnpm build        # production build
 pnpm typecheck    # tsc --noEmit
 pnpm lint         # eslint
 pnpm test         # vitest run (tests/ and evals/)
-pnpm eval         # replay eval report (needs seed/llm-cache.json; skipped without it)
+pnpm eval         # replay eval report from seed/llm-cache.json (offline, free)
+pnpm eval:live    # eval against the live model, nothing written (needs ANTHROPIC_API_KEY, costs money)
+pnpm seed-cache   # record live answers for all eval cases into seed/llm-cache.json (--force re-runs all)
 pnpm format       # prettier --write
 pnpm format:check # prettier --check
 pnpm db:generate  # drizzle-kit: create a migration from src/db/schema changes
