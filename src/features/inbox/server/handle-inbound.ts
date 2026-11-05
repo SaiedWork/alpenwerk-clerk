@@ -1,3 +1,5 @@
+import { getDb } from "@/db/client";
+import { createDbRateLimitStore } from "@/db/rate-limit-store";
 import { env } from "@/lib/env";
 import {
   SIGNATURE_HEADER,
@@ -5,6 +7,7 @@ import {
   verifySignature,
   WebhookAuthError,
 } from "@/lib/hmac";
+import { claimOnce, releaseClaim } from "@/lib/rate-limit";
 import { inboundEmailSchema, type InboundEmail } from "../schemas/inbound";
 import { ingestEmail } from "./ingest";
 
@@ -15,13 +18,24 @@ export interface InboundDeps {
   secret: string | undefined;
   now: () => Date;
   ingest: (email: InboundEmail) => Promise<{ caseId: string }>;
+  /** `true` for the first request with this signature, `false` for a replay. */
+  claimSignature: (signature: string) => Promise<boolean>;
+  releaseSignature: (signature: string) => Promise<void>;
 }
 
-const defaultDeps = (): InboundDeps => ({
-  secret: env.INBOUND_WEBHOOK_SECRET,
-  now: () => new Date(),
-  ingest: (email) => ingestEmail(email, "webhook"),
-});
+// Hex is case-insensitive, so the key is lowercased: an upper-case copy is the same signature.
+const replayKey = (signature: string) => `replay:${signature.toLowerCase()}`;
+
+const defaultDeps = (): InboundDeps => {
+  const store = createDbRateLimitStore(getDb());
+  return {
+    secret: env.INBOUND_WEBHOOK_SECRET,
+    now: () => new Date(),
+    ingest: (email) => ingestEmail(email, "webhook"),
+    claimSignature: (signature) => claimOnce(store, replayKey(signature)),
+    releaseSignature: (signature) => releaseClaim(store, replayKey(signature)),
+  };
+};
 
 const fail = (status: number, error: string) =>
   Response.json({ error }, { status });
@@ -65,6 +79,15 @@ export async function handleInboundEmail(
     return tooBig ? fail(413, "INPUT_TOO_LONG") : fail(400, "INVALID_BODY");
   }
 
-  const { caseId } = await deps.ingest(parsed.data);
-  return Response.json({ caseId }, { status: 201 });
+  // The signature header is present and valid here: verifySignature passed.
+  const signature = request.headers.get(SIGNATURE_HEADER) as string;
+  if (!(await deps.claimSignature(signature))) return fail(401, "REPLAYED");
+
+  try {
+    const { caseId } = await deps.ingest(parsed.data);
+    return Response.json({ caseId }, { status: 201 });
+  } catch (error) {
+    await deps.releaseSignature(signature);
+    throw error;
+  }
 }

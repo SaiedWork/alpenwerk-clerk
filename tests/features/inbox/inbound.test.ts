@@ -8,6 +8,7 @@ import { signBody } from "@/lib/hmac";
 
 vi.mock("@/lib/env", () => ({ env: { INBOUND_WEBHOOK_SECRET: "s3cret" } }));
 vi.mock("@/features/inbox/server/ingest", () => ({ ingestEmail: vi.fn() }));
+vi.mock("@/db/client", () => ({ getDb: vi.fn() }));
 
 const secret = "s3cret";
 const now = new Date("2026-11-06T10:00:00Z");
@@ -22,8 +23,23 @@ function setup() {
   const ingest = vi.fn<InboundDeps["ingest"]>(async () => ({
     caseId: "case-1",
   }));
-  const deps: InboundDeps = { secret, now: () => now, ingest };
-  return { ingest, deps };
+  const claimed = new Set<string>();
+  const claimSignature = vi.fn(async (sig: string) => {
+    if (claimed.has(sig)) return false;
+    claimed.add(sig);
+    return true;
+  });
+  const releaseSignature = vi.fn(async (sig: string) => {
+    claimed.delete(sig);
+  });
+  const deps: InboundDeps = {
+    secret,
+    now: () => now,
+    ingest,
+    claimSignature,
+    releaseSignature,
+  };
+  return { ingest, deps, claimSignature, releaseSignature };
 }
 
 function signed(payload: unknown, headers: Record<string, string> = {}) {
@@ -149,5 +165,46 @@ describe("handleInboundEmail", () => {
       json: { error: "PAYLOAD_TOO_LARGE" },
     });
     expect(ingest).not.toHaveBeenCalled();
+  });
+
+  describe("replay protection", () => {
+    it("rejects the same signed request the second time", async () => {
+      const { ingest, deps } = setup();
+      const request = () => signed(email);
+      expect((await call(request(), deps)).status).toBe(201);
+      expect(await call(request(), deps)).toEqual({
+        status: 401,
+        json: { error: "REPLAYED" },
+      });
+      expect(ingest).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not use up a slot for forged, stale or invalid requests", async () => {
+      const { deps, claimSignature } = setup();
+      await call(signed(email, { "x-signature": "0".repeat(64) }), deps);
+      await call(signed("not json"), deps);
+      await call(signed({ ...email, from: "x" }), deps);
+      expect(claimSignature).not.toHaveBeenCalled();
+    });
+
+    it("gives the claim back when storing fails, so a retry can succeed", async () => {
+      const { ingest, deps, releaseSignature } = setup();
+      ingest.mockRejectedValueOnce(new Error("db down"));
+      const raw = JSON.stringify(email);
+      const again = () =>
+        new Request("http://x/", {
+          method: "POST",
+          body: raw,
+          headers: {
+            "x-timestamp": ts,
+            "x-signature": signBody(secret, ts, raw),
+          },
+        });
+      await expect(handleInboundEmail(again(), deps)).rejects.toThrow(
+        "db down",
+      );
+      expect(releaseSignature).toHaveBeenCalledTimes(1);
+      expect((await call(again(), deps)).status).toBe(201);
+    });
   });
 });
