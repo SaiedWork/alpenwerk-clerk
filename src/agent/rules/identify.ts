@@ -1,15 +1,6 @@
-import { t } from "@/lib/i18n-de";
 import { namesMatch } from "@/lib/normalize";
-import type {
-  IdentifyRuleCode,
-  RuleInput,
-  RuleResult,
-  Severity,
-} from "./types";
-
-function result(code: IdentifyRuleCode, severity: Severity): RuleResult {
-  return { code, severity, messageDe: t.rules[code] };
-}
+import { ruleResult as result } from "./result";
+import type { RuleInput, RuleResult } from "./types";
 
 const sameEmail = (a: string, b: string) =>
   a.trim().toLowerCase() === b.trim().toLowerCase();

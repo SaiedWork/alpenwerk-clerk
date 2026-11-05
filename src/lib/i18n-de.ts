@@ -11,6 +11,20 @@ export const t = {
     ID_DOB_MISMATCH:
       "Das angegebene Geburtsdatum weicht vom hinterlegten Geburtsdatum ab.",
     ID_POLICY_INACTIVE: "Die Police ist nicht aktiv (ruhend oder storniert).",
+    ADDR_INCOMPLETE:
+      "Die Adresse ist unvollständig (Straße, Hausnummer, PLZ oder Ort fehlt).",
+    ADDR_PLZ_INVALID: "Die Postleitzahl hat nicht fünf Ziffern.",
+    ADDR_NON_DE:
+      "Die neue Adresse liegt außerhalb Deutschlands und wird manuell geprüft.",
+    BANK_IBAN_INVALID: "Die IBAN fehlt oder ist ungültig (Prüfsumme falsch).",
+    BANK_NON_DE:
+      "Die neue IBAN ist keine deutsche IBAN und wird manuell geprüft.",
+    BANK_HOLDER_MISMATCH:
+      "Der Kontoinhaber fehlt oder weicht vom Versicherungsnehmer ab.",
+    BANK_NO_MANDATE: "Es liegt kein aktives SEPA-Mandat vor.",
+    BANK_SAME_IBAN: "Die neue IBAN entspricht der bereits hinterlegten IBAN.",
+    BANK_RECENT_ADDRESS_CHANGE:
+      "Die Adresse wurde in den letzten 14 Tagen geändert (Betrugsschutz).",
     ID_SENDER_UNKNOWN:
       "Die Absender-E-Mail-Adresse stimmt nicht mit der hinterlegten Adresse überein.",
   },

@@ -1,28 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { identifyRules } from "@/agent/rules/identify";
-import type { LegacySnapshot, RuleInput } from "@/agent/rules/types";
-
-const snapshot: LegacySnapshot = {
-  policyNo: "AW-100101",
-  status: "aktiv",
-  firstName: "Anna",
-  lastName: "Müller-Schmidt",
-  dateOfBirth: "1985-04-12",
-  email: "anna.mueller@example.test",
-};
-
-function input(overrides: Partial<RuleInput> = {}): RuleInput {
-  return {
-    intents: ["address_change"],
-    primaryIntent: "address_change",
-    confidence: 0.95,
-    identity: { senderName: "Anna Müller-Schmidt", dateOfBirth: "1985-04-12" },
-    senderEmail: "anna.mueller@example.test",
-    snapshot,
-    now: new Date("2026-11-05T10:00:00Z"),
-    ...overrides,
-  };
-}
+import type { RuleInput } from "@/agent/rules/types";
+import { input, snapshot } from "./fixtures";
 
 const codes = (i: RuleInput) => identifyRules(i).map((r) => r.code);
 

@@ -14,8 +14,19 @@ export type IdentifyRuleCode =
   | "ID_POLICY_INACTIVE"
   | "ID_SENDER_UNKNOWN";
 
-/** Grows with every rule group (address, bank, termination, general). */
-export type RuleCode = IdentifyRuleCode;
+export type AddressRuleCode =
+  "ADDR_INCOMPLETE" | "ADDR_PLZ_INVALID" | "ADDR_NON_DE";
+
+export type BankRuleCode =
+  | "BANK_IBAN_INVALID"
+  | "BANK_NON_DE"
+  | "BANK_HOLDER_MISMATCH"
+  | "BANK_NO_MANDATE"
+  | "BANK_SAME_IBAN"
+  | "BANK_RECENT_ADDRESS_CHANGE";
+
+/** Grows with every rule group (termination, general). */
+export type RuleCode = IdentifyRuleCode | AddressRuleCode | BankRuleCode;
 
 /** One rule outcome. `messageDe` is the German explanation shown in the console. */
 export interface RuleResult {
@@ -35,6 +46,10 @@ export interface LegacySnapshot {
   /** `YYYY-MM-DD` */
   dateOfBirth: string;
   email: string;
+  /** Active SEPA mandate, `null` if there is none. */
+  activeMandate: { iban: string; holder: string } | null;
+  /** Time of the latest address change in the change log, `null` if never changed. */
+  lastAddressChangeAt: Date | null;
 }
 
 /** Normalized, Zod-validated values from the LLM. `null` means "not present in the email". */
@@ -44,12 +59,30 @@ export interface ExtractedIdentity {
   dateOfBirth: string | null;
 }
 
+/** Address as stated in the email, trimmed; `null` for anything missing. */
+export interface ExtractedAddress {
+  street: string | null;
+  houseNo: string | null;
+  plz: string | null;
+  city: string | null;
+  country: string | null;
+}
+
+/** Bank data as stated in the email. The IBAN is already normalized (no spaces, uppercase). */
+export interface ExtractedBank {
+  iban: string | null;
+  accountHolder: string | null;
+}
+
 export interface RuleInput {
   /** All intents detected in the email; `primaryIntent` is the one acted on. */
   intents: Intent[];
   primaryIntent: Intent;
   confidence: number;
   identity: ExtractedIdentity;
+  /** Only set for `address_change` / `bank_change` respectively. */
+  address: ExtractedAddress | null;
+  bank: ExtractedBank | null;
   senderEmail: string;
   /** `null` when the policy number is absent in the legacy system. */
   snapshot: LegacySnapshot | null;
