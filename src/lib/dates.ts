@@ -85,3 +85,96 @@ export function formatDateTime(date: Date): string {
 export function formatCalendarDate(iso: string): string {
   return dateOnly.format(new Date(`${iso}T00:00:00Z`));
 }
+
+const MONTHS: Record<string, number> = {
+  januar: 1,
+  jan: 1,
+  jänner: 1,
+  january: 1,
+  februar: 2,
+  feb: 2,
+  february: 2,
+  märz: 3,
+  maerz: 3,
+  mär: 3,
+  mrz: 3,
+  mar: 3,
+  march: 3,
+  april: 4,
+  apr: 4,
+  mai: 5,
+  may: 5,
+  juni: 6,
+  jun: 6,
+  june: 6,
+  juli: 7,
+  jul: 7,
+  july: 7,
+  august: 8,
+  aug: 8,
+  september: 9,
+  sep: 9,
+  sept: 9,
+  oktober: 10,
+  okt: 10,
+  october: 10,
+  oct: 10,
+  november: 11,
+  nov: 11,
+  dezember: 12,
+  dez: 12,
+  december: 12,
+  dec: 12,
+};
+
+const pad = (n: number, width = 2) => String(n).padStart(width, "0");
+
+/** Two-digit years: up to the current year means 20yy, otherwise 19yy (`85` -> 1985, `05` -> 2005). */
+function expandYear(raw: string, now: Date): number {
+  if (raw.length === 4) return Number(raw);
+  const current = now.getUTCFullYear();
+  const candidate = 2000 + Number(raw);
+  return candidate <= current ? candidate : candidate - 100;
+}
+
+/**
+ * Defensive date parser for dates copied from emails. Day-first order is mandatory, as in German
+ * usage: `12.04.1985`, `12.4.85`, `12/04/1985`, `12-04-1985`, `12. April 1985`, `12 Apr. 1985`,
+ * plus ISO `1985-04-12`. Month > 12 is never swapped (no US order). Returns `YYYY-MM-DD` for a real
+ * calendar date, else `null`. `now` only resolves two-digit years.
+ */
+export function parseFlexibleDate(raw: string, now: Date): string | null {
+  const text = raw
+    .trim()
+    .toLowerCase()
+    .replace(/^(am|den|vom|zum|ab|per)\s+/, "")
+    .replace(/\s+/g, " ");
+
+  const iso = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(text);
+  if (iso) {
+    return parseIsoDate(
+      `${iso[1]}-${pad(Number(iso[2]))}-${pad(Number(iso[3]))}`,
+    );
+  }
+
+  const numeric = /^(\d{1,2}) ?[./-] ?(\d{1,2}) ?[./-] ?(\d{4}|\d{2})$/.exec(
+    text,
+  );
+  if (numeric) {
+    const year = expandYear(numeric[3], now);
+    return parseIsoDate(
+      `${pad(year, 4)}-${pad(Number(numeric[2]))}-${pad(Number(numeric[1]))}`,
+    );
+  }
+
+  const written = /^(\d{1,2})\.? ?([a-zäöü]+)\.?,? ?(\d{4}|\d{2})$/.exec(text);
+  if (written) {
+    const month = MONTHS[written[2]];
+    if (!month) return null;
+    const year = expandYear(written[3], now);
+    return parseIsoDate(
+      `${pad(year, 4)}-${pad(month)}-${pad(Number(written[1]))}`,
+    );
+  }
+  return null;
+}

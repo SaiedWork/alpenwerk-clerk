@@ -58,3 +58,17 @@ export function namesMatch(a: string, b: string): boolean {
     left.every((token, i) => token === right[i])
   );
 }
+
+/** Trimmed text, or `null` when empty or missing. */
+export function textOrNull(raw: string | null | undefined): string | null {
+  if (raw === null || raw === undefined) return null;
+  const text = normalizeText(raw);
+  return text === "" ? null : text;
+}
+
+/** Policy numbers: no whitespace, uppercase, canonical hyphen (`aw 100101` -> `AW-100101`). */
+export function normalizePolicyNo(raw: string): string {
+  const compact = raw.replace(/\s+/g, "").toUpperCase();
+  const match = /^([A-Z]{2})-?(\d+)$/.exec(compact);
+  return match ? `${match[1]}-${match[2]}` : compact;
+}
