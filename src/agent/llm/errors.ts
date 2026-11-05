@@ -1,3 +1,6 @@
+import { t } from "@/lib/i18n-de";
+import { LlmInputError } from "./limits";
+
 /** Failures of the live extraction call. Each has a stable `code` stored on the event row. */
 export type LlmErrorCode =
   | "LLM_NOT_CONFIGURED"
@@ -26,4 +29,22 @@ export class ReplayMissError extends Error {
     super("No cached extraction for this email and LLM_PROVIDER=replay");
     this.name = "ReplayMissError";
   }
+}
+
+/** Daily circuit breaker for live calls is open: only cached emails run until tomorrow (Berlin). */
+export class LlmBudgetError extends Error {
+  readonly code = "DAILY_CAP_REACHED";
+  constructor(readonly cap: number) {
+    super(`Daily live LLM call cap of ${cap} reached`);
+    this.name = "LlmBudgetError";
+  }
+}
+
+/** German message for the UI, or `null` for errors that are not part of the LLM step. */
+export function llmFailureMessageDe(error: unknown): string | null {
+  if (error instanceof LlmBudgetError) return t.llm.dailyCapReached;
+  if (error instanceof ReplayMissError) return t.llm.replayMiss;
+  if (error instanceof LlmInputError) return t.llm.inputTooLong;
+  if (error instanceof LlmError) return t.llm.failed;
+  return null;
 }

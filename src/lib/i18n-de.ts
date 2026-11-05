@@ -2,6 +2,17 @@
 // The legacy section and the rule explanations exist so far; the console adds its own later.
 
 export const t = {
+  // User-facing messages for failures of the LLM step.
+  llm: {
+    dailyCapReached:
+      "Tageslimit für Live-KI erreicht — bitte Beispiel-E-Mails verwenden.",
+    replayMiss:
+      "Diese E-Mail liegt nicht als aufgezeichnete Analyse vor. Bitte eine Beispiel-E-Mail verwenden.",
+    inputTooLong:
+      "Die E-Mail ist zu lang (Betreff max. 200, Text max. 4.000 Zeichen).",
+    failed:
+      "Die KI-Analyse ist fehlgeschlagen. Der Fall kann später erneut versucht werden.",
+  },
   // Customer-neutral internal explanations of rule results, shown as "Warum?" in the console.
   rules: {
     ID_POLICY_NOT_FOUND:

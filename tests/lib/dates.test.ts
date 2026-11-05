@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   berlinDateIso,
+  berlinDayStart,
   endOfMonthBerlinIso,
   formatCalendarDate,
   formatDateTime,
@@ -100,5 +101,23 @@ describe("formatDateTime / formatCalendarDate", () => {
 
   it("formats calendar dates without timezone shift", () => {
     expect(formatCalendarDate("2026-11-05")).toBe("05.11.2026");
+  });
+});
+
+describe("berlinDayStart", () => {
+  it.each([
+    // CET (UTC+1): Berlin midnight is 23:00 UTC the day before
+    ["2026-01-15T10:00:00Z", "2026-01-14T23:00:00.000Z"],
+    // CEST (UTC+2)
+    ["2026-07-15T10:00:00Z", "2026-07-14T22:00:00.000Z"],
+    // 23:30 UTC is already the next day in Berlin
+    ["2026-07-15T22:30:00Z", "2026-07-15T22:00:00.000Z"],
+    // exactly at Berlin midnight
+    ["2026-01-14T23:00:00Z", "2026-01-14T23:00:00.000Z"],
+    // DST change days (spring forward 2026-03-29, fall back 2026-10-25)
+    ["2026-03-29T12:00:00Z", "2026-03-28T23:00:00.000Z"],
+    ["2026-10-25T12:00:00Z", "2026-10-24T22:00:00.000Z"],
+  ])("day start of %s is %s", (instant, expected) => {
+    expect(berlinDayStart(new Date(instant)).toISOString()).toBe(expected);
   });
 });

@@ -178,3 +178,19 @@ export function parseFlexibleDate(raw: string, now: Date): string | null {
   }
   return null;
 }
+
+/** Start (00:00 Berlin) of the Berlin calendar day containing `instant`, as a UTC instant. */
+export function berlinDayStart(instant: Date): Date {
+  const iso = berlinDateIso(instant);
+  const [year, month, day] = iso.split("-").map(Number);
+  const utcMidnight = Date.UTC(year, month - 1, day);
+  // Berlin is UTC+1 or UTC+2; DST switches at night, never at midnight, so one of the two fits.
+  for (const offsetHours of [1, 2]) {
+    const candidate = new Date(utcMidnight - offsetHours * 3_600_000);
+    const previous = new Date(candidate.getTime() - 1);
+    if (berlinDateIso(candidate) === iso && berlinDateIso(previous) !== iso) {
+      return candidate;
+    }
+  }
+  throw new RangeError(`Cannot determine Berlin day start for ${iso}`);
+}
