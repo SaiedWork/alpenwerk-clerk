@@ -1,0 +1,24 @@
+{
+  "id": "I02",
+  "policyFixture": "yilmaz",
+  "email": {
+    "from": "ayse.yilmaz@example.org",
+    "subject": "Adresse ändern",
+    "body": "Guten Tag,\n\nbitte ändern Sie die Adresse für die Police AW-100103 auf Mozartstraße 5, 50674 Köln.\n\nDanke\nPeter Meier"
+  },
+  "expected": {
+    "intent": "address_change",
+    "decision": "NEEDS_REVIEW",
+    "reasonCodes": ["ID_NAME_MISMATCH"]
+  },
+  "expectedFields": {
+    "policyNo": "AW-100103",
+    "senderName": "Peter Meier",
+    "street": "Mozartstraße",
+    "houseNo": "5",
+    "plz": "50674",
+    "city": "Köln",
+    "country": null
+  },
+  "notes": "Sender address matches the file, but the signed name is a different person."
+}

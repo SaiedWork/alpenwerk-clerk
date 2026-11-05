@@ -1,0 +1,19 @@
+{
+  "id": "T02",
+  "policyFixture": "fischer-irrevocable",
+  "email": {
+    "from": "wolfgang.fischer@example.org",
+    "subject": "Kündigung AW-100112",
+    "body": "Guten Tag,\n\nich möchte meinen Vertrag AW-100112 kündigen, bitte zum Ende des Monats. Das Geld brauche ich für eine Anschaffung.\n\nViele Grüße\nWolfgang Fischer"
+  },
+  "expected": {
+    "intent": "termination",
+    "decision": "NEEDS_REVIEW",
+    "reasonCodes": ["TERM_ALWAYS_REVIEW", "TERM_IRREVOCABLE_BENEFICIARY"]
+  },
+  "expectedFields": {
+    "policyNo": "AW-100112",
+    "senderName": "Wolfgang Fischer"
+  },
+  "notes": "Termination on a policy with an irrevocable beneficiary, which needs third-party consent."
+}

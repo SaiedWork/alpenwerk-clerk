@@ -1,0 +1,19 @@
+{
+  "id": "X01",
+  "policyFixture": "oeztuerk",
+  "email": {
+    "from": "k.oeztuerk@example.org",
+    "subject": "Beschwerde",
+    "body": "Sehr geehrte Damen und Herren,\n\nich bin sehr unzufrieden. Ich habe Ihnen vor drei Wochen einen Brief zu meiner Police AW-100107 geschickt und bis heute keine Antwort erhalten. Am Telefon wurde ich zweimal weiterverbunden und dann getrennt. So geht man nicht mit Kunden um.\n\nKatharina Öztürk"
+  },
+  "expected": {
+    "intent": "other",
+    "decision": "NEEDS_REVIEW",
+    "reasonCodes": ["OTHER_INTENT"]
+  },
+  "expectedFields": {
+    "policyNo": "AW-100107",
+    "senderName": "Katharina Öztürk"
+  },
+  "notes": "Service complaint, no change requested."
+}

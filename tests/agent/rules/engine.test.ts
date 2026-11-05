@@ -191,6 +191,22 @@ describe("evaluate: rule-level eval matrix", () => {
   });
 });
 
+describe("evaluate: intent other without a policy", () => {
+  it("X04 spam with no policy number is reviewed, not replied to", () => {
+    const result = evaluate(
+      input({
+        snapshot: null,
+        intents: ["other"],
+        primaryIntent: "other",
+        confidence: 0.1,
+        identity: { senderName: null, dateOfBirth: null },
+      }),
+    );
+    expect(result.decision).toBe("NEEDS_REVIEW");
+    expect(result.reasonCodes).toEqual(["OTHER_INTENT"]);
+  });
+});
+
 describe("evaluate: normalizedParams", () => {
   it("is null for REPLY_ONLY so a blocked case never reaches the executor", () => {
     expect(

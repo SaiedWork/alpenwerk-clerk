@@ -7,12 +7,18 @@ const sameEmail = (a: string, b: string) =>
 
 /**
  * Identification rules. Without a policy snapshot only ID_POLICY_NOT_FOUND applies,
- * because there is nothing to compare against. A missing name or birth date in the email
+ * because there is nothing to compare against. The exception is intent `other`: it always
+ * goes to a human, and spam or a complaint often has no policy number, so a missing
+ * snapshot is not a block there. A missing name or birth date in the email
  * is not a mismatch: the rules only compare what the customer actually stated.
  */
 export function identifyRules(input: RuleInput): RuleResult[] {
   const { snapshot, identity, senderEmail } = input;
-  if (!snapshot) return [result("ID_POLICY_NOT_FOUND", "block")];
+  if (!snapshot) {
+    return input.primaryIntent === "other"
+      ? []
+      : [result("ID_POLICY_NOT_FOUND", "block")];
+  }
 
   const results: RuleResult[] = [];
 

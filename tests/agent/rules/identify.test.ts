@@ -22,6 +22,15 @@ describe("identifyRules", () => {
     ]);
   });
 
+  it("does not block intent `other` without a snapshot (human review handles it)", () => {
+    const i = input({
+      snapshot: null,
+      intents: ["other"],
+      primaryIntent: "other",
+    });
+    expect(identifyRules(i)).toEqual([]);
+  });
+
   describe("ID_NAME_MISMATCH", () => {
     it.each([
       ["Mueller Schmidt, Anna", false], // order, umlaut and hyphen variants

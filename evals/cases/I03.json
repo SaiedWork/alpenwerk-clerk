@@ -1,0 +1,24 @@
+{
+  "id": "I03",
+  "policyFixture": "schneider-ruhend",
+  "email": {
+    "from": "michael.schneider@example.org",
+    "subject": "Neue Anschrift",
+    "body": "Hallo,\n\nich bin umgezogen. Neue Adresse für meine Versicherung AW-100108: Gartenstraße 9, 70173 Stuttgart.\n\nGruß\nMichael Schneider"
+  },
+  "expected": {
+    "intent": "address_change",
+    "decision": "NEEDS_REVIEW",
+    "reasonCodes": ["ID_POLICY_INACTIVE"]
+  },
+  "expectedFields": {
+    "policyNo": "AW-100108",
+    "senderName": "Michael Schneider",
+    "street": "Gartenstraße",
+    "houseNo": "9",
+    "plz": "70173",
+    "city": "Stuttgart",
+    "country": null
+  },
+  "notes": "Everything matches, but the policy is ruhend."
+}

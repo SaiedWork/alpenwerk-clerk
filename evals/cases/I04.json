@@ -1,0 +1,24 @@
+{
+  "id": "I04",
+  "policyFixture": "lehmann-work-email",
+  "email": {
+    "from": "markus.lehmann@example.test",
+    "subject": "Adressänderung AW-100114",
+    "body": "Guten Tag,\n\nich schreibe von meiner privaten Adresse, da die Firmenmail gerade nicht geht. Bitte tragen Sie für die Police AW-100114 folgende neue Anschrift ein: Lindenhof 3, 44137 Dortmund.\n\nMit freundlichen Grüßen\nMarkus Lehmann"
+  },
+  "expected": {
+    "intent": "address_change",
+    "decision": "NEEDS_REVIEW",
+    "reasonCodes": ["ID_SENDER_UNKNOWN"]
+  },
+  "expectedFields": {
+    "policyNo": "AW-100114",
+    "senderName": "Markus Lehmann",
+    "street": "Lindenhof",
+    "houseNo": "3",
+    "plz": "44137",
+    "city": "Dortmund",
+    "country": null
+  },
+  "notes": "Name and policy match; the sender address differs from the work address on file."
+}

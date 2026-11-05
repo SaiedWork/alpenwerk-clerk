@@ -1,0 +1,19 @@
+{
+  "id": "T01",
+  "policyFixture": "weiss",
+  "email": {
+    "from": "hj.weiss@example.org",
+    "subject": "Kündigung meiner Lebensversicherung",
+    "body": "Sehr geehrte Damen und Herren,\n\nhiermit kündige ich meine Lebensversicherung mit der Versicherungsnummer AW-100106 zum nächstmöglichen Termin. Bitte bestätigen Sie mir die Kündigung schriftlich.\n\nMit freundlichen Grüßen\nHans-Jürgen Weiß"
+  },
+  "expected": {
+    "intent": "termination",
+    "decision": "NEEDS_REVIEW",
+    "reasonCodes": ["TERM_ALWAYS_REVIEW"]
+  },
+  "expectedFields": {
+    "policyNo": "AW-100106",
+    "senderName": "Hans-Jürgen Weiß"
+  },
+  "notes": "Clear termination request. Never auto-executed."
+}

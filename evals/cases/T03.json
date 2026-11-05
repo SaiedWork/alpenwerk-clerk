@@ -1,0 +1,19 @@
+{
+  "id": "T03",
+  "policyFixture": "wojcik",
+  "email": {
+    "from": "lukasz.wojcik@example.org",
+    "subject": "Frage zur Kündigung",
+    "body": "Hallo,\n\nich überlege, meine Versicherung AW-100104 zu kündigen. Was bekomme ich denn dann ausgezahlt? Kündigen möchte ich noch nicht, ich will mich nur informieren.\n\nDanke\nŁukasz Wójcik"
+  },
+  "expected": {
+    "intent": "other",
+    "decision": "NEEDS_REVIEW",
+    "reasonCodes": ["OTHER_INTENT"]
+  },
+  "expectedFields": {
+    "policyNo": "AW-100104",
+    "senderName": "Łukasz Wójcik"
+  },
+  "notes": "An enquiry, not a termination. Must not be classified as termination."
+}

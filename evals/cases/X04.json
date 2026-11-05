@@ -1,0 +1,19 @@
+{
+  "id": "X04",
+  "policyFixture": null,
+  "email": {
+    "from": "gewinn-info@promo-mail.example",
+    "subject": "!!! Sie haben gewonnen !!!",
+    "body": "Herzlichen Glückwunsch!!! Klicken Sie jetzt auf www.gewinn-abholen.example und sichern Sie sich Ihren Bonus von 5.000 EUR. Nur heute gültig!!!"
+  },
+  "expected": {
+    "intent": "other",
+    "decision": "NEEDS_REVIEW",
+    "reasonCodes": ["OTHER_INTENT"]
+  },
+  "expectedFields": {
+    "policyNo": null,
+    "senderName": null
+  },
+  "notes": "Spam with no policy number. Intent other skips the identify block, so a human sees it."
+}

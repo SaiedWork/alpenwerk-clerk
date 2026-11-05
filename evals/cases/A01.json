@@ -1,0 +1,24 @@
+{
+  "id": "A01",
+  "policyFixture": "becker",
+  "email": {
+    "from": "thomas.becker@example.org",
+    "subject": "Adressänderung zur Versicherungsnummer AW-100102",
+    "body": "Sehr geehrte Damen und Herren,\n\nzum 1. des nächsten Monats ziehe ich um. Bitte ändern Sie meine Anschrift für die Versicherungsnummer AW-100102 wie folgt:\n\nBirkenstraße 22\n40215 Düsseldorf\n\nVielen Dank und freundliche Grüße\nThomas Becker"
+  },
+  "expected": {
+    "intent": "address_change",
+    "decision": "AUTO_EXECUTE",
+    "reasonCodes": []
+  },
+  "expectedFields": {
+    "policyNo": "AW-100102",
+    "senderName": "Thomas Becker",
+    "street": "Birkenstraße",
+    "houseNo": "22",
+    "plz": "40215",
+    "city": "Düsseldorf",
+    "country": null
+  },
+  "notes": "Clean formal address change. The move date is a free-text hint only; effective_date is not scored."
+}
