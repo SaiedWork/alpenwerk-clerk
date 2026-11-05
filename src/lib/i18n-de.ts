@@ -49,6 +49,20 @@ export const t = {
         kontoinhaber: "Kontoinhaber",
       },
     },
+    termination: {
+      title: "Kündigung (Ansicht)",
+      readOnly:
+        "Nur Ansicht: Kündigungen werden durch einen Sachbearbeiter manuell erfasst.",
+      facts: "Eckdaten",
+      effectiveDate: "Indikativer Kündigungstermin",
+      effectiveDateNote: "Demo-Regel: Ende des laufenden Monats.",
+      surrenderNote: "Indikativ und unverbindlich, keine Berechnung.",
+      beneficiary: "Bezugsberechtigung",
+      irrevocableNotice:
+        "Unwiderrufliche Bezugsberechtigung: Für eine Kündigung ist die Zustimmung der bezugsberechtigten Person erforderlich.",
+      revocable:
+        "Widerrufliche Bezugsberechtigung (keine Zustimmung Dritter erforderlich).",
+    },
     policy: {
       title: "Police",
       notFound: "Police nicht gefunden.",
@@ -61,6 +75,7 @@ export const t = {
       noChanges: "Keine Änderungen protokolliert.",
       editAddress: "Adresse ändern",
       editBank: "Bankverbindung ändern",
+      viewTermination: "Kündigung ansehen",
       yes: "ja",
       no: "nein",
       fields: {

@@ -149,7 +149,6 @@ export function PolicyOverview({ detail }: { detail: PolicyDetail }) {
       )}
 
       <div className="actions">
-        {/* Targets are built in the next task (address and bank forms). */}
         <Link
           className="btn"
           href={`/legacy/police/${policy.policyNo}/adresse`}
@@ -163,6 +162,13 @@ export function PolicyOverview({ detail }: { detail: PolicyDetail }) {
           data-testid="edit-bank"
         >
           {s.editBank}
+        </Link>
+        <Link
+          className="btn"
+          href={`/legacy/police/${policy.policyNo}/kuendigung`}
+          data-testid="view-termination"
+        >
+          {s.viewTermination}
         </Link>
       </div>
     </div>
