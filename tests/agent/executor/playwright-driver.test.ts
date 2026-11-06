@@ -55,7 +55,6 @@ function setup(present: string[], user: string | null = "op") {
     user: user ?? undefined,
     password: user ? "pw" : undefined,
     caseId: "c1",
-    step: "identify",
     sink: { save },
     launch,
   });
@@ -72,7 +71,6 @@ describe("PlaywrightLegacyDriver", () => {
     expect(save).toHaveBeenCalledWith(
       expect.objectContaining({
         caseId: "c1",
-        step: "identify",
         caption: "Police gefunden",
       }),
     );

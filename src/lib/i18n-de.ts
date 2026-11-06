@@ -57,6 +57,10 @@ export const t = {
     captions: {
       policyFound: "Police gefunden",
       policyNotFound: "Police nicht gefunden",
+      addressBefore: "Adresse vor Änderung",
+      bankBefore: "Bankverbindung vor Änderung",
+      formFilled: "Formular ausgefüllt",
+      confirmation: "Bestätigung",
     },
   },
   legacy: {

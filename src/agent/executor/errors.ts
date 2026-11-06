@@ -2,7 +2,9 @@ export type LegacyDriverErrorCode =
   | "LEGACY_NOT_CONFIGURED"
   | "LEGACY_LOGIN_FAILED"
   | "LEGACY_UNEXPECTED_PAGE"
-  | "LEGACY_PARSE_FAILED";
+  | "LEGACY_PARSE_FAILED"
+  | "LEGACY_FORM_REJECTED"
+  | "LEGACY_CONFIRMATION_MISMATCH";
 
 /** Failure of the browser driver. `code` ends up on the event row and in the console. */
 export class LegacyDriverError extends Error {

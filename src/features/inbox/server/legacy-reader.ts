@@ -28,7 +28,6 @@ export function createCaseLegacyReader(
     user: env.LEGACY_USER,
     password: env.LEGACY_PASSWORD,
     caseId,
-    step: "identify",
     sink: createDbScreenshotSink(db),
     launch: launchBrowser,
   });
