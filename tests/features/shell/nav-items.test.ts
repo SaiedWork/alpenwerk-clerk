@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { isActivePath, NAV_ITEMS } from "@/features/shell/components/nav-items";
+import {
+  FOOTER_NAV_ITEMS,
+  isActivePath,
+  NAV_ITEMS,
+} from "@/features/shell/components/nav-items";
 
 describe("isActivePath", () => {
   it("matches the exact path and sub-paths only", () => {
@@ -9,8 +13,10 @@ describe("isActivePath", () => {
     expect(isActivePath("/audit", "/faelle")).toBe(false);
   });
 
-  it("lists six unique console routes", () => {
-    expect(NAV_ITEMS).toHaveLength(6);
-    expect(new Set(NAV_ITEMS.map((i) => i.href)).size).toBe(6);
+  it("lists six unique console routes, the about page in the footer", () => {
+    expect(NAV_ITEMS).toHaveLength(5);
+    expect(FOOTER_NAV_ITEMS.map((i) => i.href)).toEqual(["/ueber"]);
+    const all = [...NAV_ITEMS, ...FOOTER_NAV_ITEMS];
+    expect(new Set(all.map((i) => i.href)).size).toBe(6);
   });
 });

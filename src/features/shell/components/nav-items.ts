@@ -17,6 +17,10 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { href: "/freigaben", label: t.console.nav.reviews, icon: UserCheck },
   { href: "/kennzahlen", label: t.console.nav.kpi, icon: BarChart3 },
   { href: "/audit", label: t.console.nav.audit, icon: ScrollText },
+];
+
+/** Shown in the sidebar footer, below the main navigation. */
+export const FOOTER_NAV_ITEMS: readonly NavItem[] = [
   { href: "/ueber", label: t.console.nav.about, icon: Info },
 ];
 

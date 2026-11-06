@@ -231,7 +231,7 @@ export const t = {
       reviews: "Freigaben",
       kpi: "Kennzahlen",
       audit: "Audit",
-      about: "Über",
+      about: "Über Demo",
       legacy: "Altsystem öffnen",
     },
     close: "Schließen",
@@ -418,6 +418,68 @@ export const t = {
         summary: "Zusammenfassung",
       },
       languages: { de: "Deutsch", en: "Englisch", other: "Andere" },
+    },
+    about: {
+      title: "Über die Demo",
+      description:
+        "Alpenwerk Leben AG ist erfunden, ebenso alle Kundendaten. Gezeigt wird ein kontrollierter digitaler Mitarbeiter, der E-Mails von Versicherten bearbeitet.",
+      principleTitle: "Das Prinzip",
+      principle: [
+        {
+          title: "Die KI versteht",
+          text: "Ein Sprachmodell liest die E-Mail und zieht Angaben heraus: Anliegen, Policennummer, Adresse oder IBAN. Es entscheidet nichts und schreibt keine Antwort.",
+        },
+        {
+          title: "Regeln entscheiden",
+          text: "Feste, geprüfte Regeln legen fest, ob der Clerk handelt, nachfragt oder einen Menschen holt. Jede Entscheidung nennt ihre Gründe.",
+        },
+        {
+          title: "Vorlagen sprechen",
+          text: "Antworten an Kundinnen und Kunden kommen aus festen deutschen Vorlagen, nie vom Sprachmodell. Eine IBAN erscheint dort nur maskiert.",
+        },
+        {
+          title: "Der Browser führt aus",
+          text: "Änderungen trägt der Clerk wie ein Mensch im Altsystem ein, per Browser, und liest das Ergebnis danach zur Kontrolle wieder aus.",
+        },
+      ],
+      flowTitle: "So läuft ein Fall ab",
+      flowHint:
+        "Jeder Schritt wird gespeichert und lässt sich im Fall nachlesen.",
+      flow: {
+        analyze: "Die KI liest die E-Mail und erkennt Anliegen und Angaben.",
+        identify:
+          "Der Clerk sucht die Police im Altsystem und gleicht Name und Absender ab.",
+        evaluate:
+          "Die Regeln entscheiden: automatisch ausführen, nachfragen oder prüfen lassen.",
+        execute:
+          "Nur bei bestandener Prüfung trägt der Browser die Änderung im Altsystem ein.",
+        verify: "Der Clerk liest die Änderung aus dem Altsystem zurück.",
+        reply:
+          "Eine deutsche Vorlage wird gefüllt; ein Mensch prüft sie, falls nötig.",
+      },
+      safetyTitle: "Sicherheit und Grenzen",
+      safety: [
+        "Alle Daten sind synthetisch und werden regelmäßig zurückgesetzt.",
+        "Kündigungen und unklare Fälle führt der Clerk nie selbst aus; ein Mensch entscheidet.",
+        "Inhalte aus E-Mails gelten als Daten, nie als Anweisung an den Clerk.",
+        "Jede Handlung steht unveränderlich im Audit, ohne E-Mail-Text und ohne vollständige IBAN.",
+        "Eigene Texte für die Live-KI sind pro Besucher und pro Tag begrenzt.",
+      ],
+      tryTitle: "Selbst ausprobieren",
+      try: {
+        inbox: {
+          title: "Posteingang",
+          text: "Eine Beispiel-E-Mail senden und zusehen.",
+        },
+        reviews: {
+          title: "Freigaben",
+          text: "Fälle prüfen, ablehnen oder freigeben.",
+        },
+        audit: {
+          title: "Audit",
+          text: "Nachlesen, wer wann was getan hat.",
+        },
+      },
     },
     kpi: {
       title: "Kennzahlen",

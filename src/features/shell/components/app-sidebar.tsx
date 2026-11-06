@@ -1,27 +1,56 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ExternalLink } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarFooter,
   SidebarMenu,
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { t } from "@/lib/i18n-de";
-import { isActivePath, NAV_ITEMS } from "./nav-items";
+import { ExternalLink } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  FOOTER_NAV_ITEMS,
+  isActivePath,
+  NAV_ITEMS,
+  type NavItem,
+} from "./nav-items";
 
 export function AppSidebar({ reviewCount }: { reviewCount: number }) {
   const pathname = usePathname();
+  const renderItem = ({ href, label, icon: Icon }: NavItem) => (
+    <SidebarMenuItem key={href}>
+      <SidebarMenuButton
+        isActive={isActivePath(pathname, href)}
+        className="data-active:bg-foreground/10 data-active:font-semibold"
+        render={<Link href={href} />}
+      >
+        <Icon />
+        <span>{label}</span>
+      </SidebarMenuButton>
+      {href === "/freigaben" && reviewCount > 0 ? (
+        <SidebarMenuBadge
+          aria-label={t.console.reviews.navCount.replace(
+            "{count}",
+            String(reviewCount),
+          )}
+        >
+          {reviewCount}
+        </SidebarMenuBadge>
+      ) : null}
+    </SidebarMenuItem>
+  );
+
   return (
     <Sidebar collapsible="offcanvas">
       <SidebarHeader className="flex-row items-center gap-3 px-4 py-4">
@@ -46,33 +75,16 @@ export function AppSidebar({ reviewCount }: { reviewCount: number }) {
           <SidebarGroupLabel>{t.console.navLabel}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
-                <SidebarMenuItem key={href}>
-                  <SidebarMenuButton
-                    isActive={isActivePath(pathname, href)}
-                    className="data-active:bg-foreground/10 data-active:font-semibold"
-                    render={<Link href={href} />}
-                  >
-                    <Icon />
-                    <span>{label}</span>
-                  </SidebarMenuButton>
-                  {href === "/freigaben" && reviewCount > 0 ? (
-                    <SidebarMenuBadge
-                      aria-label={t.console.reviews.navCount.replace(
-                        "{count}",
-                        String(reviewCount),
-                      )}
-                    >
-                      {reviewCount}
-                    </SidebarMenuBadge>
-                  ) : null}
-                </SidebarMenuItem>
-              ))}
+              {NAV_ITEMS.map((item) => renderItem(item))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
+        <SidebarMenu>
+          {FOOTER_NAV_ITEMS.map((item) => renderItem(item))}
+        </SidebarMenu>
+        <SidebarSeparator className="mx-0" />
         <SidebarMenu>
           <SidebarMenuItem>
             {/* Plain anchor: /legacy is a separate app with its own layout. */}
