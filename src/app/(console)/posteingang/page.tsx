@@ -8,6 +8,9 @@ import { env } from "@/lib/env";
 import { t } from "@/lib/i18n-de";
 import { logger } from "@/lib/logger";
 
+// The live budget changes all day, so never prerender this page.
+export const dynamic = "force-dynamic";
+
 // The submit action starts the pipeline in `after()`, so it needs the full function time.
 export const maxDuration = 60;
 

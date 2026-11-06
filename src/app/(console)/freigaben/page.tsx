@@ -6,6 +6,9 @@ import { ReviewQueueTable } from "@/features/review/components/review-queue-tabl
 import { listReviewQueue } from "@/features/review/server/list-review-queue";
 import { t } from "@/lib/i18n-de";
 
+// Reads the database on every request; without this Next would prerender it at build time.
+export const dynamic = "force-dynamic";
+
 export default async function ReviewQueuePage() {
   const rows = await listReviewQueue(getDb());
   const q = t.console.reviews;
