@@ -51,7 +51,9 @@ export function CaseDetail({ view }: { view: CaseView }) {
             `${c.handling}: ${formatHandlingTime(view.handlingMs)}`,
           ].join(" · ")}
         >
-          <StatusBadge status={view.status} />
+          <span data-testid="case-status">
+            <StatusBadge status={view.status} />
+          </span>
         </PageHeader>
       </div>
 

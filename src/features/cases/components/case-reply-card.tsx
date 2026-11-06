@@ -41,7 +41,10 @@ export function CaseReplyCard({ view }: { view: CaseView }) {
       ) : reply ? (
         <div className="space-y-2 text-sm">
           <p className="font-medium break-words">{reply.subject}</p>
-          <p className="whitespace-pre-wrap break-words text-muted-foreground">
+          <p
+            data-testid="reply-body"
+            className="whitespace-pre-wrap break-words text-muted-foreground"
+          >
             {reply.body}
           </p>
         </div>

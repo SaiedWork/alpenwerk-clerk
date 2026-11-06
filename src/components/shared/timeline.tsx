@@ -39,7 +39,7 @@ export function Timeline({ items }: { items: readonly TimelineItem[] }) {
         const { icon: Icon, className } = ICONS[item.status];
         const last = i === items.length - 1;
         return (
-          <li key={item.key} className="flex gap-3">
+          <li key={item.key} data-testid="timeline-step" className="flex gap-3">
             <div className="flex flex-col items-center">
               <Icon className={cn("size-5 shrink-0", className)} />
               {last ? null : <div className="w-px flex-1 bg-border" />}

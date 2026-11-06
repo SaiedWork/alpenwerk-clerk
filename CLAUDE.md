@@ -21,6 +21,7 @@ pnpm db:migrate   # apply migrations in drizzle/ to the database in .env.local
 pnpm db:studio    # drizzle studio
 pnpm send-email B01 # send an eval-case email to the signed webhook of the running app, wait, print the result
 pnpm db:reset     # wipe and reseed app + legacy data and reload seeded llm_cache rows on the .env.local database
+pnpm e2e         # Playwright smoke test (B01 end to end); RESETS the database in .env.local, needs local Chrome and LEGACY_USER/PASSWORD
 ```
 
 Node 22+ and pnpm are required. Add new scripts here when they are introduced.
