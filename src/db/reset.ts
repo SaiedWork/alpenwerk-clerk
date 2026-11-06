@@ -3,6 +3,7 @@ import { env } from "@/lib/env";
 import * as app from "./schema/app";
 import * as legacy from "./schema/legacy";
 import { seedLegacy, type SeedSummary } from "./seed";
+import { seedDemoCases, type DemoSummary } from "./seed-demo";
 import { loadSeededCache, reloadSeededCache } from "./seed-cache";
 import { withTransaction } from "./tx";
 
@@ -35,7 +36,7 @@ const TABLES_TO_WIPE = [
   legacy.legacyUsers,
 ];
 
-export interface ResetSummary extends SeedSummary {
+export interface ResetSummary extends SeedSummary, DemoSummary {
   seededCacheEntries: number;
 }
 
@@ -62,6 +63,7 @@ export async function resetDatabase(
     await tx.execute(sql`TRUNCATE ${list} RESTART IDENTITY`);
     const summary = await seedLegacy(tx, now, operator);
     const seededCacheEntries = await reloadSeededCache(tx, cacheEntries);
-    return { ...summary, seededCacheEntries };
+    const demo = await seedDemoCases(tx, now);
+    return { ...summary, ...demo, seededCacheEntries };
   });
 }
