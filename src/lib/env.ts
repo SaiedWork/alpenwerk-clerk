@@ -28,6 +28,13 @@ const envSchema = z.object({
   LEGACY_PASSWORD: optionalString,
   // Signs the legacy login cookie. Min. 32 chars; generate with `openssl rand -hex 32`.
   LEGACY_SESSION_SECRET: z.string().min(32).optional(),
+  // `browser`: identify reads through the legacy UI with Playwright. `seed`: answers from the
+  // seed fixtures (offline, no browser; what the evals and tests use).
+  LEGACY_READER: z.enum(["browser", "seed"]).default("seed"),
+  // Local Chrome for development; on Vercel the bundled Chromium is used instead.
+  LOCAL_CHROME_PATH: optionalString,
+  // Set by Vercel on every deployment; selects the bundled Chromium.
+  VERCEL: optionalString,
   BROWSER_WS_ENDPOINT: optionalString,
 });
 

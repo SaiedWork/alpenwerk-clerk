@@ -77,6 +77,8 @@ export const reviewDecisionEnum = appSchema.enum(
 /** Postgres `bytea`, used for screenshots. Drizzle has no built-in type for it. */
 const bytea = customType<{ data: Buffer; driverData: Buffer | string }>({
   dataType: () => "bytea",
+  // The HTTP driver sends parameters as text, so bytes go in as a hex literal.
+  toDriver: (value) => `\\x${value.toString("hex")}`,
   fromDriver: (value) =>
     typeof value === "string"
       ? Buffer.from(value.replace(/^\\x/, ""), "hex")

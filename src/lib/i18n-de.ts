@@ -52,6 +52,13 @@ export const t = {
     ID_SENDER_UNKNOWN:
       "Die Absender-E-Mail-Adresse stimmt nicht mit der hinterlegten Adresse überein.",
   },
+  // Captions of the screenshots the browser driver takes.
+  executor: {
+    captions: {
+      policyFound: "Police gefunden",
+      policyNotFound: "Police nicht gefunden",
+    },
+  },
   legacy: {
     systemName: "Alpenwerk Leben AG — Bestandsführung v4.2",
     demoBanner: "Demo-System mit synthetischen Daten",

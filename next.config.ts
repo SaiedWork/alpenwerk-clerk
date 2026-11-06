@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   // File tracing misses data files that these packages read at runtime
   // (playwright-core/browsers.json, the Chromium binary), so ship them explicitly.
   outputFileTracingIncludes: {
-    "/api/spike": [
+    "/api/inbound/email": [
       "./node_modules/playwright-core/**/*",
       "./node_modules/@sparticuz/chromium/**/*",
     ],

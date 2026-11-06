@@ -137,8 +137,15 @@ export function PolicyOverview({ detail }: { detail: PolicyDetail }) {
           <tbody>
             {changes.map((change) => (
               <tr key={change.id} data-testid="changelog-row">
-                <td>{formatDateTime(change.changedAt)}</td>
-                <td>{change.field}</td>
+                <td>
+                  <time
+                    dateTime={change.changedAt.toISOString()}
+                    data-testid="changelog-at"
+                  >
+                    {formatDateTime(change.changedAt)}
+                  </time>
+                </td>
+                <td data-testid="changelog-field">{change.field}</td>
                 <td>{change.oldValue}</td>
                 <td>{change.newValue}</td>
                 <td>{change.changedBy}</td>
