@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { NormalizedExtraction } from "@/agent/llm/normalize";
+import type { NormalizedParams } from "@/agent/rules/engine";
 import type { LegacySnapshot } from "@/agent/rules/types";
 import type { PipelineState, StoredEvent } from "./types";
 
@@ -61,6 +62,34 @@ const snapshotSchema = z.object({
   surrenderValueIndicative: z.number().nullable(),
 }) satisfies z.ZodType<LegacySnapshot>;
 
+const addressPartsSchema = z.object({
+  street: z.string().nullable(),
+  houseNo: z.string().nullable(),
+  plz: z.string().nullable(),
+  city: z.string().nullable(),
+  country: z.string().nullable(),
+});
+
+const normalizedParamsSchema = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("address_change"), address: addressPartsSchema }),
+  z.object({
+    kind: z.literal("bank_change"),
+    iban: z.string(),
+    accountHolder: z.string().nullable(),
+  }),
+  z.object({
+    kind: z.literal("termination"),
+    indicativeEffectiveDate: z.string(),
+    surrenderValueIndicative: z.number().nullable(),
+    irrevocableBeneficiary: z.boolean(),
+  }),
+]) satisfies z.ZodType<NormalizedParams>;
+
+export const evaluatePayloadSchema = z.object({
+  decision: z.enum(["AUTO_EXECUTE", "NEEDS_REVIEW", "REPLY_ONLY"]),
+  normalizedParams: normalizedParamsSchema.nullable(),
+});
+
 export const analyzePayloadSchema = z.object({
   extraction: normalizedExtractionSchema,
   source: z.enum(["cache", "live"]),
@@ -91,6 +120,10 @@ export function stateFromEvents(done: StoredEvent[]): PipelineState {
       const parsed = identifyPayloadSchema.safeParse(event.payload);
       if (!parsed.success) throw new PipelineStateError("identify");
       state.snapshot = parsed.data.snapshot;
+    } else if (event.step === "evaluate") {
+      const parsed = evaluatePayloadSchema.safeParse(event.payload);
+      if (!parsed.success) throw new PipelineStateError("evaluate");
+      state.evaluation = parsed.data;
     }
   }
   return state;

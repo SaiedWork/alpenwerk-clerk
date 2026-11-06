@@ -1,13 +1,20 @@
+import type { LegacyWriter } from "@/agent/executor/driver";
 import type { LegacySnapshotReader } from "@/agent/executor/snapshot-reader";
 import type { NormalizedExtraction } from "@/agent/llm/normalize";
 import type { ResolveDeps } from "@/agent/llm/resolve";
+import type { NormalizedParams } from "@/agent/rules/engine";
 import type { Decision, LegacySnapshot } from "@/agent/rules/types";
 import type { caseStatuses, eventStatuses } from "@/db/schema/app";
 
 export type CaseStatus = (typeof caseStatuses)[number];
 export type EventStatus = (typeof eventStatuses)[number];
 
-export const STEP_NAMES = ["analyze", "identify", "evaluate"] as const;
+export const STEP_NAMES = [
+  "analyze",
+  "identify",
+  "evaluate",
+  "execute",
+] as const;
 export type StepName = (typeof STEP_NAMES)[number];
 
 /** The case fields the pipeline reads. */
@@ -57,6 +64,13 @@ export interface PipelineStore {
 export interface PipelineDeps {
   store: PipelineStore;
   reader: LegacySnapshotReader;
+  /** Absent when no browser is configured; the execute step then ends `skipped`. */
+  writer?: LegacyWriter;
+  /**
+   * A human approved this case. Lets a `NEEDS_REVIEW` case continue to execute; the review
+   * gate sets it. Never set for automatic runs.
+   */
+  approved?: boolean;
   /** Lazy so a missing API key becomes a recorded step failure, not a crash. */
   llm: () => ResolveDeps;
   now?: () => Date;
@@ -67,6 +81,10 @@ export interface PipelineState {
   extraction?: NormalizedExtraction;
   /** `undefined`: identify has not run. `null`: it ran and the policy was not found. */
   snapshot?: LegacySnapshot | null;
+  evaluation?: {
+    decision: Decision;
+    normalizedParams: NormalizedParams | null;
+  };
 }
 
 export interface StepContext {

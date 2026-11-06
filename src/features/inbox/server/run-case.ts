@@ -22,6 +22,7 @@ export async function runCase(caseId: string): Promise<void> {
     await runPipeline(caseId, {
       store: createDbPipelineStore(db),
       reader: legacy.reader,
+      writer: legacy.writer,
       llm: () => ({
         ...stores,
         model: getModel({

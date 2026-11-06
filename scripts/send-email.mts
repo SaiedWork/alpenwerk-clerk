@@ -1,5 +1,5 @@
 // Sends an eval-case email to the signed inbound webhook of a running app, then waits for the
-// pipeline and prints the case, its events and its screenshots.
+// pipeline (through execute) and prints the case, its events and its screenshots.
 // Usage: pnpm send-email B01 [--url http://localhost:3000] [--no-wait]
 // Needs the dev server running (pnpm dev) and .env.local pointing at the same database.
 import { parseArgs } from "node:util";
@@ -48,14 +48,35 @@ if (response.status !== 201 || values["no-wait"])
 
 const { caseId: createdId } = JSON.parse(text) as { caseId: string };
 const db = getDb();
-// Steps 1-3 end in one of these; AWAITING_REVIEW and later are not reached by them yet.
-const settled = new Set(["EVALUATED", "AWAITING_REVIEW", "FAILED"]);
+// Settled: the case waits for review or failed, or the execute step has finished or been skipped.
 const deadline = Date.now() + 60_000;
 let row;
+let events;
 do {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   [row] = await db.select().from(cases).where(eq(cases.id, createdId));
-} while (row && !settled.has(row.status) && Date.now() < deadline);
+  events = await db
+    .select({
+      step: caseEvents.step,
+      status: caseEvents.status,
+      ms: caseEvents.durationMs,
+      payload: caseEvents.payload,
+    })
+    .from(caseEvents)
+    .where(eq(caseEvents.caseId, createdId))
+    .orderBy(asc(caseEvents.seq));
+  const executeDone = events.some(
+    (e) => e.step === "execute" && e.status !== "started",
+  );
+  if (
+    !row ||
+    executeDone ||
+    row.status === "AWAITING_REVIEW" ||
+    row.status === "FAILED"
+  ) {
+    break;
+  }
+} while (Date.now() < deadline);
 
 console.log({
   id: row?.id,
@@ -66,15 +87,10 @@ console.log({
   error: row?.error,
 });
 console.table(
-  await db
-    .select({
-      step: caseEvents.step,
-      status: caseEvents.status,
-      ms: caseEvents.durationMs,
-    })
-    .from(caseEvents)
-    .where(eq(caseEvents.caseId, createdId))
-    .orderBy(asc(caseEvents.seq)),
+  events?.map(({ payload, ...rest }) => ({
+    ...rest,
+    result: JSON.stringify(payload).slice(0, 70),
+  })),
 );
 console.table(
   (
