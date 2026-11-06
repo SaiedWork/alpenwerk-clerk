@@ -6,6 +6,7 @@ import type { replyStatuses } from "@/db/schema/app";
 import { STUCK_AFTER_MS } from "@/features/review/server/review-case";
 import { isInFlight } from "../status";
 import { extractedFields, type ExtractedField } from "./extracted-fields";
+import { previewReply, type ReplyPreview } from "./preview-reply";
 import { summarizeEvent } from "./summarize-event";
 
 /** Raw rows as loaded by `getCaseDetail`. */
@@ -76,6 +77,8 @@ export type CaseView = {
   screenshots: CaseDetailRows["screenshots"];
   reply: CaseDetailRows["reply"];
   review: CaseDetailRows["review"];
+  /** Only while the case waits at the review gate. */
+  replyPreview: ReplyPreview | null;
   /** The case failed, or no progress for longer than the stuck window. */
   canResume: boolean;
   /** The page should keep refreshing. */
@@ -141,6 +144,8 @@ export function buildCaseView(rows: CaseDetailRows, now: Date): CaseView {
     screenshots: rows.screenshots,
     reply: rows.reply,
     review: rows.review,
+    replyPreview:
+      c.status === "AWAITING_REVIEW" ? previewReply(rows.events) : null,
     canResume: canResumeCase(c.status, c.updatedAt, now),
     inFlight: isInFlight({ status: c.status, decision: c.decision }),
   };

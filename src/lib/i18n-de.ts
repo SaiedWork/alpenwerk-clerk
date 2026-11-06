@@ -310,6 +310,55 @@ export const t = {
         REPLY_ONLY:
           "Es wird nichts geändert. Der Absender erhält eine Antwort mit der Bitte um Korrektur.",
       },
+      review: {
+        title: "Freigabe",
+        intro:
+          "Dieser Fall wartet auf eine Entscheidung. Bei Freigabe führt der Clerk die Änderung im Altsystem aus; bei Ablehnung geschieht nichts, und der Absender erhält eine Absage.",
+        noteLabel: "Notiz (optional)",
+        notePlaceholder: "Kurze Begründung für das Protokoll",
+        noteCount: "{count} / {max}",
+        approve: "Freigeben",
+        reject: "Ablehnen",
+        working: "Wird gespeichert …",
+        rejectTitle: "Fall ablehnen?",
+        rejectText:
+          "Es wird nichts im Altsystem geändert. Der Absender erhält die Absage unten als Entwurf, den Sie danach prüfen und senden.",
+        cancel: "Abbrechen",
+        confirmReject: "Ablehnen",
+        previewTitle: "Vorschau der Antwort",
+        previewIntro:
+          "So würde die Antwort aussehen. Sie wird erst nach Ihrer Entscheidung erstellt und lässt sich dann noch bearbeiten.",
+        previewApprove: "Bei Freigabe",
+        previewReject: "Bei Ablehnung",
+        previewBadge: "Vorschau",
+        edit: "Bearbeiten",
+        editSubject: "Betreff",
+        editBody: "Text",
+        save: "Speichern",
+        discard: "Verwerfen",
+        send: "Senden (simuliert)",
+        sendTitle: "Antwort senden?",
+        sendText:
+          "Die Antwort wird nur simuliert gesendet. Danach gilt der Fall als erledigt und der Text ist nicht mehr änderbar.",
+        confirmSend: "Senden",
+        draftHint:
+          "Entwurf: Bitte prüfen, bei Bedarf bearbeiten und dann senden.",
+        errors: {
+          CASE_NOT_FOUND: "Der Fall wurde nicht gefunden.",
+          CASE_NOT_AWAITING_REVIEW:
+            "Der Fall wartet nicht mehr auf eine Freigabe. Möglicherweise wurde er schon entschieden.",
+          CASE_AWAITING_REVIEW: "Der Fall wartet auf eine Freigabe.",
+          CASE_FINISHED: "Der Fall ist bereits abgeschlossen.",
+          CASE_NOT_STUCK: "Der Fall wird gerade noch verarbeitet.",
+          CASE_NOT_REPLY_READY:
+            "Die Antwort kann in diesem Zustand nicht gesendet werden.",
+          REPLY_NOT_FOUND: "Es gibt noch keine Antwort.",
+          REPLY_NOT_DRAFT: "Die Antwort wurde bereits gesendet.",
+          INVALID_INPUT:
+            "Die Eingabe ist ungültig. Betreff und Text dürfen nicht leer sein, und eine vollständige IBAN darf nicht vorkommen.",
+          UNKNOWN: "Das hat nicht geklappt. Bitte später erneut versuchen.",
+        },
+      },
       replyStatus: {
         draft: "Entwurf",
         approved: "Freigegeben",

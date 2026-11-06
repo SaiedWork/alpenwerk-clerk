@@ -5,6 +5,9 @@ import { getCaseDetail } from "@/features/cases/server/get-case";
 
 type Props = { params: Promise<{ id: string }> };
 
+// The review actions run the pipeline in `after()`; execute and verify drive a browser.
+export const maxDuration = 60;
+
 export default async function CaseDetailPage({ params }: Props) {
   const { id } = await params;
   const view = await getCaseDetail(getDb(), id);

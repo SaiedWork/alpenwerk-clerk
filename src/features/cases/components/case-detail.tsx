@@ -14,6 +14,7 @@ import type { CaseView } from "../view/case-view";
 import { CaseDecisionCard } from "./case-decision-card";
 import { CaseEmailCard } from "./case-email-card";
 import { CaseReplyCard } from "./case-reply-card";
+import { CaseReviewCard } from "./case-review-card";
 import { CaseTimelineCard } from "./case-timeline-card";
 import { ResumeButton } from "./resume-button";
 
@@ -50,6 +51,10 @@ export function CaseDetail({ view }: { view: CaseView }) {
           {view.status === "FAILED" ? c.failedTitle : c.stuckTitle}
           <ResumeButton caseId={view.id} />
         </div>
+      ) : null}
+
+      {view.status === "AWAITING_REVIEW" ? (
+        <CaseReviewCard caseId={view.id} />
       ) : null}
 
       {/* From xl the row is as tall as its tallest column, up to a max height that keeps the
