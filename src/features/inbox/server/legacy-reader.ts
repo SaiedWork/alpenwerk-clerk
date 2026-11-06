@@ -1,7 +1,7 @@
 import { launchBrowser } from "@/agent/executor/launch-browser";
 import { PlaywrightLegacyDriver } from "@/agent/executor/playwright-driver";
 import { createDbScreenshotSink } from "@/agent/executor/screenshot-sink";
-import type { LegacyWriter } from "@/agent/executor/driver";
+import type { LegacyReadback, LegacyWriter } from "@/agent/executor/driver";
 import type { LegacySnapshotReader } from "@/agent/executor/snapshot-reader";
 import type { Db } from "@/db/client";
 import { env } from "@/lib/env";
@@ -11,6 +11,7 @@ export interface CaseLegacyReader {
   reader: LegacySnapshotReader;
   /** `undefined` in seed mode: there is no browser to write with. */
   writer?: LegacyWriter;
+  readback?: LegacyReadback;
   /** Releases the browser, if one was started. Always call it when the run is over. */
   close(): Promise<void>;
 }
@@ -34,5 +35,10 @@ export function createCaseLegacyReader(
     sink: createDbScreenshotSink(db),
     launch: launchBrowser,
   });
-  return { reader: driver, writer: driver, close: () => driver.close() };
+  return {
+    reader: driver,
+    writer: driver,
+    readback: driver,
+    close: () => driver.close(),
+  };
 }

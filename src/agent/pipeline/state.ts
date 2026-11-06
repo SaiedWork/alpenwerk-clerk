@@ -100,6 +100,14 @@ export const identifyPayloadSchema = z.object({
   snapshot: snapshotSchema.nullable(),
 });
 
+const executePayloadSchema = z.union([
+  z.object({
+    kind: z.enum(["address_change", "bank_change"]),
+    outcome: z.string(),
+  }),
+  z.object({ reason: z.string() }),
+]);
+
 export class PipelineStateError extends Error {
   readonly code = "STATE_INVALID";
   constructor(step: string) {
@@ -124,6 +132,12 @@ export function stateFromEvents(done: StoredEvent[]): PipelineState {
       const parsed = evaluatePayloadSchema.safeParse(event.payload);
       if (!parsed.success) throw new PipelineStateError("evaluate");
       state.evaluation = parsed.data;
+    } else if (event.step === "execute") {
+      if (!executePayloadSchema.safeParse(event.payload).success) {
+        throw new PipelineStateError("execute");
+      }
+      // A skipped execute wrote nothing, so there is nothing to verify.
+      state.executed = event.status === "succeeded";
     }
   }
   return state;

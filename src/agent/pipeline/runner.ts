@@ -3,6 +3,7 @@ import { analyze } from "@/agent/steps/analyze";
 import { evaluate } from "@/agent/steps/evaluate";
 import { execute } from "@/agent/steps/execute";
 import { identify } from "@/agent/steps/identify";
+import { verify } from "@/agent/steps/verify";
 import { describeFailure } from "./failure";
 import { stateFromEvents } from "./state";
 import {
@@ -13,7 +14,13 @@ import {
   type StoredEvent,
 } from "./types";
 
-const STEPS: Record<StepName, Step> = { analyze, identify, evaluate, execute };
+const STEPS: Record<StepName, Step> = {
+  analyze,
+  identify,
+  evaluate,
+  execute,
+  verify,
+};
 
 export type RunOutcome =
   | { outcome: "completed" }
@@ -26,7 +33,7 @@ const isDone = (e: StoredEvent) =>
   e.status === "succeeded" || e.status === "skipped";
 
 /**
- * Runs steps 1-4 (analyze, identify, evaluate, execute) for one case and resumes where it left off.
+ * Runs steps 1-5 (analyze, identify, evaluate, execute, verify) for one case and resumes where it left off.
  * A `NEEDS_REVIEW` case stops after evaluate (`awaiting_review`) unless `deps.approved` is set.
  *
  * What is done is read from the event rows, so calling this again is safe: finished steps are

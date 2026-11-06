@@ -1,42 +1,7 @@
-import type { AddressTarget, BankTarget } from "@/agent/executor/targets";
 import { PipelineStateError } from "@/agent/pipeline/state";
 import type { Step } from "@/agent/pipeline/types";
-import type { NormalizedParams } from "@/agent/rules/engine";
 import { maskIban } from "@/lib/iban";
-
-export type ExecuteErrorCode =
-  "EXECUTE_PARAMS_INVALID" | "EXECUTE_PRECONDITION_FAILED";
-
-/** The change cannot be carried out as planned. Stored on the event row, never swallowed. */
-export class ExecuteError extends Error {
-  constructor(
-    readonly code: ExecuteErrorCode,
-    message: string,
-  ) {
-    super(message);
-    this.name = "ExecuteError";
-  }
-}
-
-type Plan =
-  | { kind: "address_change"; target: AddressTarget }
-  | { kind: "bank_change"; target: BankTarget };
-
-type WritableParams = Exclude<NormalizedParams, { kind: "termination" }>;
-
-function addressTarget(
-  address: Extract<WritableParams, { kind: "address_change" }>["address"],
-): AddressTarget {
-  const { street, houseNo, plz, city, country } = address;
-  // The rules block incomplete addresses before execution; this guards against a bypass.
-  if (!street || !houseNo || !plz || !city) {
-    throw new ExecuteError(
-      "EXECUTE_PARAMS_INVALID",
-      "The address is incomplete; the rules should have blocked it.",
-    );
-  }
-  return { street, houseNo, plz, city, country };
-}
+import { ExecuteError, planFromParams } from "./plan";
 
 /**
  * Step 4: carries out an address or bank change in the legacy system through the browser
@@ -78,13 +43,7 @@ export const execute: Step = async ({ case: c, state, deps }) => {
 
   const policyNo = state.snapshot.policyNo;
   // Validate before anything is touched.
-  const plan: Plan =
-    params.kind === "address_change"
-      ? { kind: "address_change", target: addressTarget(params.address) }
-      : {
-          kind: "bank_change",
-          target: { iban: params.iban, holder: params.accountHolder },
-        };
+  const plan = planFromParams(params);
 
   await deps.store.updateCase(c.id, { status: "EXECUTING" });
   const outcome =

@@ -39,23 +39,47 @@ export type WriteOutcome =
 const same = (a: string, b: string) =>
   normalizeText(a).toLowerCase() === normalizeText(b).toLowerCase();
 
+/** Names of the address fields that differ; empty if writing `target` would change nothing. */
+export function addressDifferences(
+  current: CurrentAddress,
+  target: AddressTarget,
+): string[] {
+  const differing: string[] = [];
+  if (!same(current.street, target.street)) differing.push("street");
+  if (!same(current.houseNo, target.houseNo)) differing.push("houseNo");
+  if (normalizePlz(current.plz) !== normalizePlz(target.plz)) {
+    differing.push("plz");
+  }
+  if (!same(current.city, target.city)) differing.push("city");
+  if (target.country !== null && !same(current.country, target.country)) {
+    differing.push("country");
+  }
+  return differing;
+}
+
+/** Names of the bank fields that differ. A `null` holder in the target is not compared. */
+export function bankDifferences(
+  current: CurrentBank,
+  target: BankTarget,
+): string[] {
+  const differing: string[] = [];
+  if (normalizeIban(current.iban) !== normalizeIban(target.iban)) {
+    differing.push("iban");
+  }
+  if (target.holder !== null && !same(current.holder, target.holder)) {
+    differing.push("holder");
+  }
+  return differing;
+}
+
 /** True if writing `target` would change nothing. Text compares ignore case and extra spaces. */
 export function addressMatches(
   current: CurrentAddress,
   target: AddressTarget,
 ): boolean {
-  return (
-    same(current.street, target.street) &&
-    same(current.houseNo, target.houseNo) &&
-    normalizePlz(current.plz) === normalizePlz(target.plz) &&
-    same(current.city, target.city) &&
-    (target.country === null || same(current.country, target.country))
-  );
+  return addressDifferences(current, target).length === 0;
 }
 
 export function bankMatches(current: CurrentBank, target: BankTarget): boolean {
-  return (
-    normalizeIban(current.iban) === normalizeIban(target.iban) &&
-    (target.holder === null || same(current.holder, target.holder))
-  );
+  return bankDifferences(current, target).length === 0;
 }

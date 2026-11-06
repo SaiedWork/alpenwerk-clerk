@@ -4,6 +4,8 @@
 export const t = {
   // Failure message stored on a case when a pipeline step fails for a non-LLM reason.
   pipeline: {
+    verifyMismatch:
+      "Die Änderung konnte im Altsystem nicht bestätigt werden. Bitte prüfen.",
     stepFailed:
       "Die Verarbeitung ist fehlgeschlagen. Der Fall kann erneut versucht werden.",
   },
@@ -61,6 +63,7 @@ export const t = {
       bankBefore: "Bankverbindung vor Änderung",
       formFilled: "Formular ausgefüllt",
       confirmation: "Bestätigung",
+      verification: "Verifikation",
     },
   },
   legacy: {

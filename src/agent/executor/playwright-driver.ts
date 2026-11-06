@@ -24,6 +24,7 @@ const ACTION_TIMEOUT_MS = 15_000;
 // Pipeline steps the screenshots are filed under.
 const READ_STEP = "identify";
 const WRITE_STEP = "execute";
+const VERIFY_STEP = "verify";
 
 type FormKind = "adresse" | "bank";
 
@@ -74,13 +75,17 @@ export class PlaywrightLegacyDriver implements LegacyDriver {
   async readAddress(policyNo: string): Promise<CurrentAddress | null> {
     const page = await this.loggedInPage();
     const state = await this.openForm(page, policyNo, "adresse");
-    return state === "ok" ? this.addressInputs(page) : null;
+    if (state !== "ok") return null;
+    await this.screenshot(VERIFY_STEP, t.executor.captions.verification);
+    return this.addressInputs(page);
   }
 
   async readBank(policyNo: string): Promise<CurrentBank | null> {
     const page = await this.loggedInPage();
     const state = await this.openForm(page, policyNo, "bank");
-    return state === "ok" ? this.bankInputs(page) : null;
+    if (state !== "ok") return null;
+    await this.screenshot(VERIFY_STEP, t.executor.captions.verification);
+    return this.bankInputs(page);
   }
 
   async updateAddress(

@@ -1,6 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
-import type { LegacyWriter } from "@/agent/executor/driver";
-import type { WriteOutcome } from "@/agent/executor/targets";
+import type { LegacyReadback, LegacyWriter } from "@/agent/executor/driver";
+import type {
+  AddressTarget,
+  BankTarget,
+  CurrentAddress,
+  CurrentBank,
+  WriteOutcome,
+} from "@/agent/executor/targets";
 import type { LegacySnapshotReader } from "@/agent/executor/snapshot-reader";
 import { computeCacheKey } from "@/agent/llm/cache-key";
 import { ReplayMissError } from "@/agent/llm/errors";
@@ -28,12 +34,26 @@ const entries = readSeedCache() ?? [];
 const cases = loadEvalCases();
 const b01 = cases.find((c) => c.id === "B01")!;
 
-/** Records every write; answers with `outcome` (default: the change was made). */
+/**
+ * Stand-in for the legacy system behind writer and read-back: remembers the last target it was
+ * asked to write (also when the answer is `unchanged`, as the system then holds it already)
+ * and reads that back. Tests can override `readAddress` / `readBank` to simulate drift.
+ */
 function recordingWriter(outcome: WriteOutcome = "changed") {
+  let address: CurrentAddress | null = null;
+  let bank: CurrentBank | null = null;
   return {
-    updateAddress: vi.fn(async () => outcome),
-    updateBank: vi.fn(async () => outcome),
-  } satisfies LegacyWriter;
+    updateAddress: vi.fn(async (_no: string, target: AddressTarget) => {
+      address = { ...target, country: target.country ?? "Deutschland" };
+      return outcome;
+    }),
+    updateBank: vi.fn(async (_no: string, target: BankTarget) => {
+      bank = { iban: target.iban, holder: target.holder ?? "Bestandshalter" };
+      return outcome;
+    }),
+    readAddress: vi.fn(async () => address),
+    readBank: vi.fn(async () => bank),
+  } satisfies LegacyWriter & LegacyReadback;
 }
 
 function setup(
@@ -68,6 +88,7 @@ function setup(
     store: memory.store,
     reader,
     writer,
+    readback: writer,
     approved: options.approved,
     llm: () => ({ ...stores, model: null, modelName: "replay", dailyCap: 0 }),
     now: () => EVAL_NOW,
@@ -86,10 +107,11 @@ describe("runPipeline", () => {
       [2, "identify", "succeeded"],
       [3, "evaluate", "succeeded"],
       [4, "execute", "succeeded"],
+      [5, "verify", "succeeded"],
     ]);
     expect(events(id).every((e) => e.durationMs !== null)).toBe(true);
     expect(caseState(id)).toMatchObject({
-      status: "EXECUTING",
+      status: "VERIFIED",
       intent: "bank_change",
       decision: "AUTO_EXECUTE",
       reasonCodes: [],
@@ -115,7 +137,7 @@ describe("runPipeline", () => {
     const { deps, id, events, reader } = setup();
     await runPipeline(id, deps);
     expect(await runPipeline(id, deps)).toEqual({ outcome: "already_done" });
-    expect(events(id)).toHaveLength(4);
+    expect(events(id)).toHaveLength(5);
     expect(reader.readPolicy).toHaveBeenCalledTimes(1);
   });
 
@@ -172,9 +194,10 @@ describe("runPipeline", () => {
       [3, "identify", "succeeded"],
       [4, "evaluate", "succeeded"],
       [5, "execute", "succeeded"],
+      [6, "verify", "succeeded"],
     ]);
     expect(analyzeKeyCalls).toHaveBeenCalledTimes(1);
-    expect(caseState(id)).toMatchObject({ status: "EXECUTING", error: null });
+    expect(caseState(id)).toMatchObject({ status: "VERIFIED", error: null });
   });
 
   it("ignores a stale started row left by a crashed invocation", async () => {
@@ -183,6 +206,7 @@ describe("runPipeline", () => {
     expect(await runPipeline(id, deps)).toEqual({ outcome: "completed" });
     expect(events(id).map((e) => e.status)).toEqual([
       "started",
+      "succeeded",
       "succeeded",
       "succeeded",
       "succeeded",
@@ -248,11 +272,11 @@ describe("execute step", () => {
       writer: recordingWriter("unchanged"),
     });
     expect(await runPipeline(id, deps)).toEqual({ outcome: "completed" });
-    expect(events(id).at(-1)).toMatchObject({
+    expect(events(id).find((e) => e.step === "execute")).toMatchObject({
       step: "execute",
       status: "succeeded",
     });
-    expect(caseState(id).status).toBe("EXECUTING");
+    expect(caseState(id).status).toBe("VERIFIED");
   });
 
   it("skips REPLY_ONLY cases and never calls the writer", async () => {
@@ -260,7 +284,7 @@ describe("execute step", () => {
       evalCase: byId("B03"),
     });
     expect(await runPipeline(id, deps)).toEqual({ outcome: "completed" });
-    expect(events(id).at(-1)).toMatchObject({
+    expect(events(id).find((e) => e.step === "execute")).toMatchObject({
       step: "execute",
       status: "skipped",
       payload: { reason: "NO_ACTION" },
@@ -273,7 +297,7 @@ describe("execute step", () => {
   it("skips with NO_BROWSER when there is no writer (seed mode)", async () => {
     const { deps, id, events, caseState } = setup({ writer: null });
     expect(await runPipeline(id, deps)).toEqual({ outcome: "completed" });
-    expect(events(id).at(-1)).toMatchObject({
+    expect(events(id).find((e) => e.step === "execute")).toMatchObject({
       status: "skipped",
       payload: { reason: "NO_BROWSER" },
     });
@@ -294,7 +318,7 @@ describe("execute step", () => {
       outcome: "completed",
     });
     expect(first.writer!.updateBank).toHaveBeenCalledOnce();
-    expect(first.caseState(first.id).status).toBe("EXECUTING");
+    expect(first.caseState(first.id).status).toBe("VERIFIED");
   });
 
   it.each(["T01", "T02", "T03", "X01"])(
@@ -305,7 +329,7 @@ describe("execute step", () => {
         approved: true,
       });
       expect(await runPipeline(id, deps)).toEqual({ outcome: "completed" });
-      expect(events(id).at(-1)).toMatchObject({
+      expect(events(id).find((e) => e.step === "execute")).toMatchObject({
         step: "execute",
         status: "skipped",
         payload: { reason: "NOT_AUTOMATABLE" },
@@ -339,8 +363,9 @@ describe("execute step", () => {
       ).toEqual([
         ["execute", "failed"],
         ["execute", "succeeded"],
+        ["verify", "succeeded"],
       ]);
-      expect(caseState(id)).toMatchObject({ status: "EXECUTING", error: null });
+      expect(caseState(id)).toMatchObject({ status: "VERIFIED", error: null });
     },
   );
 
@@ -365,6 +390,131 @@ describe("execute step", () => {
   });
 });
 
+describe("verify step", () => {
+  const byId = (key: string) => cases.find((c) => c.id === key)!;
+
+  it("verifies a bank change and marks the case VERIFIED", async () => {
+    const { deps, id, events, caseState, writer } = setup();
+    expect(await runPipeline(id, deps)).toEqual({ outcome: "completed" });
+    expect(writer!.readBank).toHaveBeenCalledWith("AW-100102");
+    expect(events(id).at(-1)).toMatchObject({
+      step: "verify",
+      status: "succeeded",
+      payload: { kind: "bank_change", verified: true },
+    });
+    expect(caseState(id).status).toBe("VERIFIED");
+  });
+
+  it("verifies an address change", async () => {
+    const { deps, id, caseState, writer } = setup({ evalCase: byId("A01") });
+    await runPipeline(id, deps);
+    expect(writer!.readAddress).toHaveBeenCalledOnce();
+    expect(caseState(id).status).toBe("VERIFIED");
+  });
+
+  it("still verifies when execute found everything already in place", async () => {
+    const { deps, id, caseState, writer } = setup({
+      writer: recordingWriter("unchanged"),
+    });
+    await runPipeline(id, deps);
+    expect(writer!.readBank).toHaveBeenCalledOnce();
+    expect(caseState(id).status).toBe("VERIFIED");
+  });
+
+  it("fails with VERIFY_MISMATCH naming the fields, never the values", async () => {
+    const writer = recordingWriter();
+    const { deps, id, caseState, events } = setup({
+      evalCase: byId("A01"),
+      writer,
+    });
+    writer.readAddress.mockImplementation(async () => ({
+      street: "Fremdstraße",
+      houseNo: "1",
+      plz: "99999",
+      city: "Anderswo",
+      country: "Deutschland",
+    }));
+    expect(await runPipeline(id, deps)).toMatchObject({
+      outcome: "failed",
+      step: "verify",
+      code: "VERIFY_MISMATCH",
+    });
+    const failure = events(id).at(-1)!;
+    expect(failure).toMatchObject({ step: "verify", status: "failed" });
+    expect(failure.payload).toMatchObject({
+      code: "VERIFY_MISMATCH",
+      fields: expect.arrayContaining(["street", "plz", "city"]),
+    });
+    expect(caseState(id)).toMatchObject({
+      status: "FAILED",
+      error: { code: "VERIFY_MISMATCH", step: "verify" },
+    });
+    expect(caseState(id).error?.messageDe).toMatch(/Altsystem/);
+    expect(JSON.stringify(failure.payload)).not.toContain("99999");
+  });
+
+  it("treats an unreadable record as a mismatch", async () => {
+    const writer = recordingWriter();
+    const { deps, id, events } = setup({ writer });
+    writer.readBank.mockResolvedValue(null);
+    await runPipeline(id, deps);
+    expect(events(id).at(-1)?.payload).toMatchObject({
+      code: "VERIFY_MISMATCH",
+      fields: ["record"],
+    });
+  });
+
+  it("re-runs only verify after a mismatch and does not write again", async () => {
+    const writer = recordingWriter();
+    const { deps, id, events, caseState } = setup({ writer });
+    const good = writer.readBank.getMockImplementation()!;
+    writer.readBank.mockResolvedValueOnce({
+      iban: "DE00000000000000000000",
+      holder: "x",
+    });
+    expect(await runPipeline(id, deps)).toMatchObject({
+      code: "VERIFY_MISMATCH",
+    });
+
+    writer.readBank.mockImplementation(good);
+    expect(await runPipeline(id, deps)).toEqual({ outcome: "completed" });
+    expect(writer.updateBank).toHaveBeenCalledOnce();
+    expect(
+      events(id)
+        .map((e) => [e.step, e.status])
+        .slice(3),
+    ).toEqual([
+      ["execute", "succeeded"],
+      ["verify", "failed"],
+      ["verify", "succeeded"],
+    ]);
+    expect(caseState(id)).toMatchObject({ status: "VERIFIED", error: null });
+  });
+
+  it("is skipped when execute was skipped", async () => {
+    for (const options of [
+      { evalCase: byId("B03") },
+      { writer: null },
+    ] as const) {
+      const { deps, id, events, caseState } = setup(options);
+      await runPipeline(id, deps);
+      expect(events(id).at(-1)).toMatchObject({
+        step: "verify",
+        status: "skipped",
+        payload: { reason: "NOTHING_TO_VERIFY" },
+      });
+      expect(caseState(id).status).toBe("EVALUATED");
+    }
+  });
+
+  it("fails with VERIFY_UNAVAILABLE when executed without a way to read back", async () => {
+    const { deps, id } = setup();
+    expect(
+      await runPipeline(id, { ...deps, readback: undefined }),
+    ).toMatchObject({ step: "verify", code: "VERIFY_UNAVAILABLE" });
+  });
+});
+
 // Integration check: the pipeline reproduces what the eval suite expects for every case.
 describe.skipIf(entries.length === 0).each(cases)("eval case $id", (c) => {
   it("reaches the expected decision and reason codes and executes only auto cases", async () => {
@@ -385,7 +535,7 @@ describe.skipIf(entries.length === 0).each(cases)("eval case $id", (c) => {
     expect(state.status).toBe(
       {
         NEEDS_REVIEW: "AWAITING_REVIEW",
-        AUTO_EXECUTE: "EXECUTING",
+        AUTO_EXECUTE: "VERIFIED",
         REPLY_ONLY: "EVALUATED",
       }[c.expected.decision],
     );

@@ -294,6 +294,14 @@ describe("readAddress and readBank", () => {
     });
   });
 
+  it("take a Verifikation screenshot under the verify step", async () => {
+    const { driver, captions, steps } = setup();
+    await driver.readAddress("AW-1");
+    await driver.readBank("AW-1");
+    expect(captions()).toEqual(["Verifikation", "Verifikation"]);
+    expect(new Set(steps())).toEqual(new Set(["verify"]));
+  });
+
   it("return null for an unknown policy or a missing mandate", async () => {
     expect(
       await setup({ missing: true }).driver.readAddress("AW-0"),

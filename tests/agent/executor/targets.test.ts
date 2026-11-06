@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { addressMatches, bankMatches } from "@/agent/executor/targets";
+import {
+  addressDifferences,
+  addressMatches,
+  bankDifferences,
+  bankMatches,
+} from "@/agent/executor/targets";
 
 const current = {
   street: "Hauptstraße",
@@ -66,6 +71,38 @@ describe("bankMatches", () => {
     ).toBe(false);
     expect(bankMatches(bank, { iban: bank.iban, holder: "Max Becker" })).toBe(
       false,
+    );
+  });
+});
+
+describe("differences", () => {
+  const address = {
+    street: "Hauptstraße",
+    houseNo: "12",
+    plz: "50667",
+    city: "Köln",
+    country: "Deutschland",
+  };
+
+  it("name every differing address field", () => {
+    expect(
+      addressDifferences(address, {
+        street: "Ringstraße",
+        houseNo: "12",
+        plz: "10115",
+        city: "Berlin",
+        country: null,
+      }),
+    ).toEqual(["street", "plz", "city"]);
+  });
+
+  it("name differing bank fields and skip a null holder", () => {
+    const bank = { iban: "DE89370400440532013000", holder: "Anna" };
+    expect(
+      bankDifferences(bank, { iban: "DE02120300000000202051", holder: "Max" }),
+    ).toEqual(["iban", "holder"]);
+    expect(bankDifferences(bank, { iban: bank.iban, holder: null })).toEqual(
+      [],
     );
   });
 });

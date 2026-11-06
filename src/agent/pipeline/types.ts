@@ -1,4 +1,4 @@
-import type { LegacyWriter } from "@/agent/executor/driver";
+import type { LegacyReadback, LegacyWriter } from "@/agent/executor/driver";
 import type { LegacySnapshotReader } from "@/agent/executor/snapshot-reader";
 import type { NormalizedExtraction } from "@/agent/llm/normalize";
 import type { ResolveDeps } from "@/agent/llm/resolve";
@@ -14,6 +14,7 @@ export const STEP_NAMES = [
   "identify",
   "evaluate",
   "execute",
+  "verify",
 ] as const;
 export type StepName = (typeof STEP_NAMES)[number];
 
@@ -66,6 +67,8 @@ export interface PipelineDeps {
   reader: LegacySnapshotReader;
   /** Absent when no browser is configured; the execute step then ends `skipped`. */
   writer?: LegacyWriter;
+  /** Reads the record back for the verify step; set together with `writer`. */
+  readback?: LegacyReadback;
   /**
    * A human approved this case. Lets a `NEEDS_REVIEW` case continue to execute; the review
    * gate sets it. Never set for automatic runs.
@@ -81,6 +84,8 @@ export interface PipelineState {
   extraction?: NormalizedExtraction;
   /** `undefined`: identify has not run. `null`: it ran and the policy was not found. */
   snapshot?: LegacySnapshot | null;
+  /** `undefined`: execute has not run. `false`: it ended `skipped`. */
+  executed?: boolean;
   evaluation?: {
     decision: Decision;
     normalizedParams: NormalizedParams | null;
