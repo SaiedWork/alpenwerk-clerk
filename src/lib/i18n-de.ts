@@ -419,6 +419,48 @@ export const t = {
       },
       languages: { de: "Deutsch", en: "Englisch", other: "Andere" },
     },
+    kpi: {
+      title: "Kennzahlen",
+      description:
+        "Was der Clerk leistet: wie viele Fälle er allein erledigt, wo ein Mensch gebraucht wird und was die KI kostet.",
+      emptyTitle: "Noch keine Daten",
+      emptyHint:
+        "Sobald Fälle eingegangen sind, erscheinen hier die Kennzahlen. Im Posteingang lässt sich ein Beispiel senden.",
+      tiles: {
+        total: { label: "Fälle gesamt", hint: "Alle eingegangenen E-Mails" },
+        auto: {
+          label: "Automatisch bearbeitet",
+          hint: "{count} von {decided} entschiedenen Fällen",
+          none: "Noch kein Fall entschieden",
+        },
+        waiting: {
+          label: "Wartet auf einen Menschen",
+          hint: "Freigabe oder Antwort senden",
+        },
+        handling: {
+          label: "Ø Bearbeitungszeit",
+          hint: "Erledigte Fälle, ohne Wartezeit auf Menschen",
+          none: "Noch kein Fall erledigt",
+        },
+        live: {
+          label: "Live-KI heute",
+          hint: "Aufrufe von höchstens {cap} pro Tag",
+        },
+        cost: {
+          label: "KI-Kosten (geschätzt)",
+          hint: "{calls} Live-Aufrufe insgesamt",
+        },
+      },
+      charts: {
+        decision: "Entscheidungen",
+        intent: "Anliegen",
+        status: "Status",
+        cases: "Fälle",
+        tableLabel: "Tabelle: {title}",
+        noDecision: "Noch offen",
+        noIntent: "Nicht erkannt",
+      },
+    },
     audit: {
       title: "Audit",
       description:
