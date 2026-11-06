@@ -3,6 +3,7 @@ import { analyze } from "@/agent/steps/analyze";
 import { evaluate } from "@/agent/steps/evaluate";
 import { execute } from "@/agent/steps/execute";
 import { identify } from "@/agent/steps/identify";
+import { reply } from "@/agent/steps/reply";
 import { verify } from "@/agent/steps/verify";
 import { describeFailure } from "./failure";
 import { stateFromEvents } from "./state";
@@ -20,6 +21,7 @@ const STEPS: Record<StepName, Step> = {
   evaluate,
   execute,
   verify,
+  reply,
 };
 
 export type RunOutcome =
@@ -33,8 +35,9 @@ const isDone = (e: StoredEvent) =>
   e.status === "succeeded" || e.status === "skipped";
 
 /**
- * Runs steps 1-5 (analyze, identify, evaluate, execute, verify) for one case and resumes where it left off.
- * A `NEEDS_REVIEW` case stops after evaluate (`awaiting_review`) unless `deps.approved` is set.
+ * Runs steps 1-6 (analyze, identify, evaluate, execute, verify, reply) for one case and resumes where it left off.
+ * A `NEEDS_REVIEW` case stops after evaluate (`awaiting_review`) unless a human decided
+ * (`deps.approved` or `deps.rejected`).
  *
  * What is done is read from the event rows, so calling this again is safe: finished steps are
  * not repeated, a failed step is retried, a `started` row left by a dead invocation is ignored.
@@ -74,7 +77,8 @@ export async function runPipeline(
       doneByStep.get("evaluate") &&
       stateFromEvents([...doneByStep.values()]).evaluation?.decision ===
         "NEEDS_REVIEW" &&
-      !deps.approved
+      !deps.approved &&
+      !deps.rejected
     ) {
       log.info("waiting for human review");
       return { outcome: "awaiting_review" };

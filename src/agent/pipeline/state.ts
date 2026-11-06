@@ -87,6 +87,7 @@ const normalizedParamsSchema = z.discriminatedUnion("kind", [
 
 export const evaluatePayloadSchema = z.object({
   decision: z.enum(["AUTO_EXECUTE", "NEEDS_REVIEW", "REPLY_ONLY"]),
+  reasonCodes: z.array(z.string()),
   normalizedParams: normalizedParamsSchema.nullable(),
 });
 

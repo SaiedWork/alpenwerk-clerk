@@ -20,6 +20,9 @@ export interface ReviewStore {
     caseId: string,
   ): Promise<{ status: CaseStatus; updatedAt: Date } | null>;
 
-  /** Whether a human approved this case. The only source of `deps.approved`. */
-  hasApproval(caseId: string): Promise<boolean>;
+  /**
+   * What a human decided, `null` if nobody has. The only source of `deps.approved` and
+   * `deps.rejected`; at most one review exists per case.
+   */
+  getDecision(caseId: string): Promise<"approve" | "reject" | null>;
 }

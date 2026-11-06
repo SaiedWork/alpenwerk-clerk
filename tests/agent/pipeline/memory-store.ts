@@ -2,6 +2,7 @@ import type {
   CasePatch,
   PipelineCase,
   PipelineStore,
+  ReplyDraft,
   StoredEvent,
 } from "@/agent/pipeline/types";
 
@@ -11,6 +12,7 @@ export function createMemoryPipelineStore(initial: PipelineCase[]) {
     initial.map((c) => [c.id, { ...c, patch: {} as CasePatch }]),
   );
   const events: (StoredEvent & { caseId: string })[] = [];
+  const replies = new Map<string, ReplyDraft & { editedByHuman: boolean }>();
   let nextId = 1;
 
   const store: PipelineStore = {
@@ -54,11 +56,21 @@ export function createMemoryPipelineStore(initial: PipelineCase[]) {
       if (!c) throw new Error("unknown case");
       Object.assign(c.patch, patch);
     },
+    async saveReply(id, reply) {
+      if (replies.get(id)?.editedByHuman) return;
+      replies.set(id, { ...reply, editedByHuman: false });
+    },
   };
 
   return {
     store,
     events: (id: string) => events.filter((e) => e.caseId === id),
+    reply: (id: string) => replies.get(id),
+    /** Test hook: pretend a reviewer edited the draft. */
+    markReplyEdited: (id: string) => {
+      const r = replies.get(id);
+      if (r) r.editedByHuman = true;
+    },
     caseState: (id: string) => cases.get(id)?.patch ?? {},
   };
 }

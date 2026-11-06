@@ -190,7 +190,7 @@ export const replies = appSchema.table(
     status: replyStatusEnum("status").notNull().default("draft"),
     editedByHuman: boolean("edited_by_human").notNull().default(false),
   },
-  (t) => [index("replies_case_idx").on(t.caseId)],
+  (t) => [uniqueIndex("replies_case_idx").on(t.caseId)],
 );
 
 export const reviews = appSchema.table(

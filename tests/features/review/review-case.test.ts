@@ -37,8 +37,9 @@ function memoryStore(status: CaseStatus, updatedAt = NOW) {
     async getCaseState(id) {
       return id === ID ? { ...state } : null;
     },
-    async hasApproval() {
-      return reviews.some((r) => r.decision === "approve");
+    async getDecision() {
+      const last = reviews.at(-1);
+      return last ? (last.decision as "approve" | "reject") : null;
     },
   };
   return { store, state, reviews };
@@ -97,7 +98,7 @@ describe("approveCase", () => {
 });
 
 describe("rejectCase", () => {
-  it("ends the case as REJECTED and never runs it", async () => {
+  it("ends the case as REJECTED and schedules the run that drafts the reply", async () => {
     const m = memoryStore("AWAITING_REVIEW");
     const schedule = vi.fn();
     await rejectCase(
@@ -108,8 +109,8 @@ describe("rejectCase", () => {
     expect(m.reviews).toEqual([
       { decision: "reject", note: null, label: "Prüfer" },
     ]);
-    expect(schedule).not.toHaveBeenCalled();
-    expect(await m.store.hasApproval(ID)).toBe(false);
+    expect(schedule).toHaveBeenCalledExactlyOnceWith(ID);
+    expect(await m.store.getDecision(ID)).toBe("reject");
   });
 
   it.each(["EVALUATED", "DONE", "REJECTED", "FAILED"] as const)(
@@ -141,6 +142,12 @@ describe("resumeCase", () => {
     expect(r.schedule).toHaveBeenCalledExactlyOnceWith(ID);
   });
 
+  it("resumes a REJECTED case whose reply was never drafted", async () => {
+    const r = run("REJECTED", STUCK_AFTER_MS);
+    expect(await r.result).toBeNull();
+    expect(r.schedule).toHaveBeenCalledTimes(1);
+  });
+
   it("retries a FAILED case immediately", async () => {
     const r = run("FAILED", 0);
     expect(await r.result).toBeNull();
@@ -151,7 +158,7 @@ describe("resumeCase", () => {
     ["IDENTIFIED", 1_000, "CASE_NOT_STUCK"],
     ["AWAITING_REVIEW", STUCK_AFTER_MS * 10, "CASE_AWAITING_REVIEW"],
     ["DONE", STUCK_AFTER_MS * 10, "CASE_FINISHED"],
-    ["REJECTED", STUCK_AFTER_MS * 10, "CASE_FINISHED"],
+    ["REPLY_READY", STUCK_AFTER_MS * 10, "CASE_FINISHED"],
   ] as const)("refuses %s (idle %i ms) with %s", async (status, idle, code) => {
     const r = run(status, idle);
     expect(await r.result).toBe(code);
@@ -180,6 +187,6 @@ describe("resumeCase", () => {
       now: later(STUCK_AFTER_MS),
     });
     expect(schedule).toHaveBeenCalledTimes(1);
-    expect(await m.store.hasApproval(ID)).toBe(true);
+    expect(await m.store.getDecision(ID)).toBe("approve");
   });
 });

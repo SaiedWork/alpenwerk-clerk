@@ -16,6 +16,7 @@ export const STEP_NAMES = [
   "evaluate",
   "execute",
   "verify",
+  "reply",
 ] as const;
 export type StepName = (typeof STEP_NAMES)[number];
 
@@ -61,6 +62,17 @@ export interface PipelineStore {
     result: { status: EventStatus; payload: unknown; durationMs: number },
   ): Promise<void>;
   updateCase(caseId: string, patch: CasePatch): Promise<void>;
+  /**
+   * Stores the reply draft; one reply per case. A re-run replaces the draft, but never a reply
+   * a human has edited.
+   */
+  saveReply(caseId: string, reply: ReplyDraft): Promise<void>;
+}
+
+export interface ReplyDraft {
+  templateKey: string;
+  subject: string;
+  body: string;
 }
 
 export interface PipelineDeps {
@@ -75,6 +87,8 @@ export interface PipelineDeps {
    * gate sets it. Never set for automatic runs.
    */
   approved?: boolean;
+  /** A human rejected this case: execute and verify are skipped and the reply says so. */
+  rejected?: boolean;
   /** Receives one audit row per finished or failed step. Optional: tests and tools may omit it. */
   audit?: AuditSink;
   /** Lazy so a missing API key becomes a recorded step failure, not a crash. */
@@ -91,6 +105,7 @@ export interface PipelineState {
   executed?: boolean;
   evaluation?: {
     decision: Decision;
+    reasonCodes: string[];
     normalizedParams: NormalizedParams | null;
   };
 }

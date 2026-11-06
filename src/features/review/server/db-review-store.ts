@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { appendAudit } from "@/db/audit";
 import type { Db } from "@/db/client";
 import { cases, reviews } from "@/db/schema/app";
@@ -58,13 +58,14 @@ export function createDbReviewStore(db: Db): ReviewStore {
       return row ?? null;
     },
 
-    async hasApproval(caseId) {
-      const rows = await db
-        .select({ id: reviews.id })
+    async getDecision(caseId) {
+      const [row] = await db
+        .select({ decision: reviews.decision })
         .from(reviews)
-        .where(and(eq(reviews.caseId, caseId), eq(reviews.decision, "approve")))
+        .where(eq(reviews.caseId, caseId))
+        .orderBy(desc(reviews.at))
         .limit(1);
-      return rows.length > 0;
+      return row?.decision ?? null;
     },
   };
 }

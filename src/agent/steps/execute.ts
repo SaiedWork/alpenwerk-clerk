@@ -13,6 +13,14 @@ export const execute: Step = async ({ case: c, state, deps }) => {
   if (!state.evaluation) throw new PipelineStateError("evaluate");
   const { decision, normalizedParams: params } = state.evaluation;
 
+  if (deps.rejected) {
+    return {
+      status: "skipped",
+      payload: { reason: "REJECTED" },
+      casePatch: {},
+    };
+  }
+
   if (decision === "REPLY_ONLY") {
     return {
       status: "skipped",

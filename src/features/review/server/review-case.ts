@@ -51,12 +51,16 @@ export async function approveCase(
   deps.schedule(caseId);
 }
 
-/** Records the rejection and ends the case as `REJECTED`. Nothing is executed. */
+/**
+ * Records the rejection (`REJECTED`) and schedules a run: execute and verify are skipped and the
+ * reply step drafts the rejection reply. Nothing is written to the legacy system.
+ */
 export async function rejectCase(
   input: unknown,
   deps: ReviewDeps,
 ): Promise<void> {
-  await decide(input, "reject", deps);
+  const caseId = await decide(input, "reject", deps);
+  deps.schedule(caseId);
 }
 
 /**
@@ -71,7 +75,8 @@ export async function resumeCase(
   const now = (deps.now ?? (() => new Date()))();
   const state = await deps.store.getCaseState(caseId);
   if (!state) throw new ReviewError("CASE_NOT_FOUND", "case does not exist");
-  if (["DONE", "REJECTED"].includes(state.status)) {
+  // REPLY_READY: every step is done. A REJECTED case is not finished until its reply exists.
+  if (["DONE", "REPLY_READY"].includes(state.status)) {
     throw new ReviewError("CASE_FINISHED", "case is finished");
   }
   if (state.status === "AWAITING_REVIEW") {

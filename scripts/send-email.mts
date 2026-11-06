@@ -5,7 +5,7 @@
 import { parseArgs } from "node:util";
 import { asc, desc, eq } from "drizzle-orm";
 import { getDb } from "@/db/client";
-import { caseEvents, cases, screenshots } from "@/db/schema/app";
+import { caseEvents, cases, replies, screenshots } from "@/db/schema/app";
 import { env } from "@/lib/env";
 import { SIGNATURE_HEADER, signBody, TIMESTAMP_HEADER } from "@/lib/hmac";
 import { loadEvalCases } from "../evals/loader";
@@ -65,12 +65,12 @@ do {
     .from(caseEvents)
     .where(eq(caseEvents.caseId, createdId))
     .orderBy(asc(caseEvents.seq));
-  const executeDone = events.some(
-    (e) => e.step === "execute" && e.status !== "started",
+  const replyDone = events.some(
+    (e) => e.step === "reply" && e.status !== "started",
   );
   if (
     !row ||
-    executeDone ||
+    replyDone ||
     row.status === "AWAITING_REVIEW" ||
     row.status === "FAILED"
   ) {
@@ -106,4 +106,9 @@ console.table(
       .orderBy(desc(screenshots.createdAt))
   ).map(({ data, ...rest }) => ({ ...rest, bytes: data.length })),
 );
+const [reply] = await db
+  .select({ key: replies.templateKey, subject: replies.subject })
+  .from(replies)
+  .where(eq(replies.caseId, createdId));
+console.log("reply:", reply ?? "none");
 process.exit(row?.status === "FAILED" ? 1 : 0);

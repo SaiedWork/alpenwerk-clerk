@@ -1,6 +1,6 @@
 import { asc, eq, sql } from "drizzle-orm";
 import type { Db } from "@/db/client";
-import { caseEvents, cases } from "@/db/schema/app";
+import { caseEvents, cases, replies } from "@/db/schema/app";
 import type { PipelineStore } from "./types";
 
 /** Drizzle implementation of the pipeline's persistence port. */
@@ -73,6 +73,18 @@ export function createDbPipelineStore(db: Db): PipelineStore {
           updatedAt: new Date(),
         })
         .where(eq(cases.id, caseId));
+    },
+
+    async saveReply(caseId, reply) {
+      await db
+        .insert(replies)
+        .values({ caseId, ...reply })
+        .onConflictDoUpdate({
+          target: replies.caseId,
+          set: reply,
+          // A human-edited reply is never overwritten by a re-run.
+          setWhere: eq(replies.editedByHuman, false),
+        });
     },
   };
 }

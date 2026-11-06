@@ -12,7 +12,7 @@ import { createCaseLegacyReader, type CaseLegacyReader } from "./legacy-reader";
 /**
  * Composition root for running the pipeline on one case. The identify step reads the legacy
  * system through the browser driver or, with `LEGACY_READER=seed`, a stub over seed fixtures.
- * An `approve` review row lets a `NEEDS_REVIEW` case through the review gate. Never throws: it runs inside `after()`, where nobody could handle an error. Step failures
+ * A review row lets a `NEEDS_REVIEW` case through the review gate (approve: execute; reject: skip it and reply). Never throws: it runs inside `after()`, where nobody could handle an error. Step failures
  * are already stored on the case; this only guards what happens outside a step.
  */
 export async function runCase(caseId: string): Promise<void> {
@@ -21,14 +21,15 @@ export async function runCase(caseId: string): Promise<void> {
     const db = getDb();
     legacy = createCaseLegacyReader(db, caseId);
     const stores = createDbStores(db);
-    // Approval comes from the stored review row, never from the caller.
-    const approved = await createDbReviewStore(db).hasApproval(caseId);
+    // The human decision comes from the stored review row, never from the caller.
+    const decision = await createDbReviewStore(db).getDecision(caseId);
     await runPipeline(caseId, {
       store: createDbPipelineStore(db),
       reader: legacy.reader,
       writer: legacy.writer,
       readback: legacy.readback,
-      approved,
+      approved: decision === "approve",
+      rejected: decision === "reject",
       audit: createDbAuditSink(db),
       llm: () => ({
         ...stores,
