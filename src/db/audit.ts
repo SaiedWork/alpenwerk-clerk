@@ -7,7 +7,7 @@ import type { Tx } from "./tx";
  * Allowed keys of `audit_log.details`. Strict on purpose: free-form keys are how email text or a
  * full IBAN would end up in an append-only table that can never be corrected.
  */
-const auditDetailsSchema = z.strictObject({
+export const auditDetailsSchema = z.strictObject({
   source: z.string().max(40).optional(),
   step: z.string().max(40).optional(),
   status: z.string().max(40).optional(),

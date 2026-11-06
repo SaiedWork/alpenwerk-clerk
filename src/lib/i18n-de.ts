@@ -273,6 +273,7 @@ export const t = {
     },
     case: {
       back: "Zurück zu den Fällen",
+      auditLink: "Protokoll ansehen",
       notFoundTitle: "Fall nicht gefunden",
       notFoundHint:
         "Der Fall existiert nicht (mehr). Die Daten werden täglich zurückgesetzt.",
@@ -417,6 +418,62 @@ export const t = {
         summary: "Zusammenfassung",
       },
       languages: { de: "Deutsch", en: "Englisch", other: "Andere" },
+    },
+    audit: {
+      title: "Audit",
+      description:
+        "Jede Handlung von Clerk, Mensch und System, unveränderlich protokolliert. Text aus E-Mails und IBANs stehen hier nie.",
+      emptyTitle: "Noch keine Einträge",
+      emptyHint:
+        "Sobald ein Fall bearbeitet wird, erscheint das Protokoll hier.",
+      noResultsTitle: "Keine Einträge für diese Filter",
+      noResultsHint: "Andere Filter wählen oder die Filter zurücksetzen.",
+      filterActor: "Akteur",
+      filterKind: "Art",
+      all: "Alle",
+      onlyCase: "Nur ein Fall",
+      resetFilters: "Filter zurücksetzen",
+      noCase: "–",
+      columns: {
+        time: "Zeit",
+        actor: "Akteur",
+        action: "Aktion",
+        details: "Details",
+        case: "Fall",
+      },
+      actors: { agent: "Clerk", human: "Mensch", system: "System" },
+      kinds: {
+        case: "Eingang",
+        step: "Verarbeitungsschritte",
+        review: "Prüfung",
+        reply: "Antwort",
+      },
+      actions: {
+        "case.received": "E-Mail eingegangen",
+        "review.approved": "Fall freigegeben",
+        "review.rejected": "Fall abgelehnt",
+        "reply.edited": "Antwort bearbeitet",
+        "reply.sent_simulated": "Antwort gesendet (simuliert)",
+      },
+      step: "{step}: {status}",
+      stepStatus: {
+        succeeded: "erledigt",
+        skipped: "übersprungen",
+        failed: "fehlgeschlagen",
+      },
+      detail: {
+        source: {
+          simulator: "Simulator",
+          webhook: "Webhook",
+          seed: "Demo-Daten",
+        },
+        by: "von {reviewer}",
+        withNote: "mit Notiz",
+        decision: "Entscheidung: {decision}",
+        reasons: "Gründe: {codes}",
+        error: "Fehler: {code}",
+        duration: "{time}",
+      },
     },
     inbox: {
       title: "Posteingang",

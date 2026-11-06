@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ScrollText } from "lucide-react";
 import Link from "next/link";
 import { AutoRefresh } from "@/components/shared/auto-refresh";
 import { PageHeader } from "@/components/shared/page-header";
@@ -24,16 +24,25 @@ export function CaseDetail({ view }: { view: CaseView }) {
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <Link
-          href="/faelle"
-          className={cn(
-            buttonVariants({ variant: "ghost", size: "sm" }),
-            "-ml-2",
-          )}
-        >
-          <ArrowLeft data-icon="inline-start" />
-          {c.back}
-        </Link>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <Link
+            href="/faelle"
+            className={cn(
+              buttonVariants({ variant: "ghost", size: "sm" }),
+              "-ml-2",
+            )}
+          >
+            <ArrowLeft data-icon="inline-start" />
+            {c.back}
+          </Link>
+          <Link
+            href={`/audit?case=${view.id}`}
+            className={buttonVariants({ variant: "ghost", size: "sm" })}
+          >
+            <ScrollText data-icon="inline-start" />
+            {c.auditLink}
+          </Link>
+        </div>
         <PageHeader
           title={view.subject}
           description={[
