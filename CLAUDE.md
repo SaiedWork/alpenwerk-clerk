@@ -19,6 +19,7 @@ pnpm format:check # prettier --check
 pnpm db:generate  # drizzle-kit: create a migration from src/db/schema changes
 pnpm db:migrate   # apply migrations in drizzle/ to the database in .env.local
 pnpm db:studio    # drizzle studio
+pnpm send-email B01 # send an eval-case email to the signed webhook of the running app, wait, print the result
 pnpm db:reset     # wipe and reseed app + legacy data and reload seeded llm_cache rows on the .env.local database
 ```
 
