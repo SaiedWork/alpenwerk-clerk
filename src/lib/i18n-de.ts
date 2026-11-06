@@ -418,6 +418,23 @@ export const t = {
       },
       languages: { de: "Deutsch", en: "Englisch", other: "Andere" },
     },
+    reviews: {
+      title: "Freigaben",
+      description:
+        "Fälle, bei denen ein Mensch entscheiden oder eine Antwort senden muss. Der älteste steht oben.",
+      emptyTitle: "Nichts zu tun",
+      emptyHint:
+        "Alle Fälle sind entschieden und beantwortet. Neue Fälle, die eine Prüfung brauchen, erscheinen hier.",
+      navCount: "{count} offen",
+      task: { review: "Freigabe nötig", send: "Antwort senden" },
+      columns: {
+        task: "Aufgabe",
+        sender: "Absender",
+        intent: "Anliegen",
+        reasons: "Gründe",
+        waiting: "Wartet seit",
+      },
+    },
     cases: {
       title: "Fälle",
       description: "Alle eingegangenen Anfragen und ihr Bearbeitungsstand.",

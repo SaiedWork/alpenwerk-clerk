@@ -7,6 +7,9 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { getDb } from "@/db/client";
+import { countReviewQueue } from "@/features/review/server/list-review-queue";
+import { logger } from "@/lib/logger";
 import { t } from "@/lib/i18n-de";
 import { AppSidebar } from "./app-sidebar";
 import { ThemeToggle } from "./theme-toggle";
@@ -14,7 +17,18 @@ import { ThemeToggle } from "./theme-toggle";
 // Height of the demo banner; the sidebar and the sticky header start below it.
 const BANNER_HEIGHT = "2rem";
 
-export function ConsoleShell({ children }: { children: ReactNode }) {
+/** The shell must render even when the database is unreachable, so a failed count is just hidden. */
+async function loadReviewCount(): Promise<number> {
+  try {
+    return await countReviewQueue(getDb());
+  } catch (error) {
+    logger.warn({ err: error }, "review count unavailable");
+    return 0;
+  }
+}
+
+export async function ConsoleShell({ children }: { children: ReactNode }) {
+  const reviewCount = await loadReviewCount();
   return (
     <TooltipProvider>
       <div style={{ "--banner-height": BANNER_HEIGHT } as CSSProperties}>
@@ -27,7 +41,7 @@ export function ConsoleShell({ children }: { children: ReactNode }) {
           <span className="hidden truncate sm:inline">{t.console.banner}</span>
         </div>
         <SidebarProvider className="min-h-[calc(100svh-var(--banner-height))]">
-          <AppSidebar />
+          <AppSidebar reviewCount={reviewCount} />
           <SidebarInset className="min-w-0">
             <header className="sticky top-(--banner-height) z-10 flex h-12 items-center gap-2 border-b bg-background px-4">
               <div className="flex items-center gap-2 min-[1025px]:hidden">

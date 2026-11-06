@@ -13,13 +13,14 @@ import {
   SidebarHeader,
   SidebarFooter,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { t } from "@/lib/i18n-de";
 import { isActivePath, NAV_ITEMS } from "./nav-items";
 
-export function AppSidebar() {
+export function AppSidebar({ reviewCount }: { reviewCount: number }) {
   const pathname = usePathname();
   return (
     <Sidebar collapsible="offcanvas">
@@ -55,6 +56,16 @@ export function AppSidebar() {
                     <Icon />
                     <span>{label}</span>
                   </SidebarMenuButton>
+                  {href === "/freigaben" && reviewCount > 0 ? (
+                    <SidebarMenuBadge
+                      aria-label={t.console.reviews.navCount.replace(
+                        "{count}",
+                        String(reviewCount),
+                      )}
+                    >
+                      {reviewCount}
+                    </SidebarMenuBadge>
+                  ) : null}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
