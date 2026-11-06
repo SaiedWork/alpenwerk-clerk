@@ -63,10 +63,14 @@ export interface PipelineStore {
   ): Promise<void>;
   updateCase(caseId: string, patch: CasePatch): Promise<void>;
   /**
-   * Stores the reply draft; one reply per case. A re-run replaces the draft, but never a reply
-   * a human has edited.
+   * Stores the reply; one reply per case. `sent` stores it as already (simulated) sent, for
+   * cases no human was involved in. A re-run replaces a draft, but never an edited or sent reply.
    */
-  saveReply(caseId: string, reply: ReplyDraft): Promise<void>;
+  saveReply(
+    caseId: string,
+    reply: ReplyDraft,
+    options: { sent: boolean },
+  ): Promise<void>;
 }
 
 export interface ReplyDraft {

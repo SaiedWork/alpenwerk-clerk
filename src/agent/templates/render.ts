@@ -53,6 +53,8 @@ export interface RenderedReply {
 const FULL_IBAN =
   /\b[A-Z]{2}\d{2}(?:\s?[A-Z0-9]{4}){2,7}(?:\s?[A-Z0-9]{1,4})?\b/;
 
+export const containsFullIban = (text: string) => FULL_IBAN.test(text);
+
 function fill(template: string, values: Record<string, string>): string {
   return template.replace(/\{(\w+)\}/g, (_, name: string) => {
     const value = values[name];
@@ -113,7 +115,7 @@ export function render<K extends TemplateKey>(
     t.replies.signature,
   ].join("\n\n");
 
-  if (FULL_IBAN.test(subject) || FULL_IBAN.test(body)) {
+  if (containsFullIban(subject) || containsFullIban(body)) {
     throw new TemplateError(
       "TEMPLATE_UNSAFE_OUTPUT",
       `${key} would contain a full IBAN`,

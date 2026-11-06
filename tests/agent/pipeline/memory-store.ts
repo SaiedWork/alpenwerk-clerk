@@ -12,7 +12,10 @@ export function createMemoryPipelineStore(initial: PipelineCase[]) {
     initial.map((c) => [c.id, { ...c, patch: {} as CasePatch }]),
   );
   const events: (StoredEvent & { caseId: string })[] = [];
-  const replies = new Map<string, ReplyDraft & { editedByHuman: boolean }>();
+  const replies = new Map<
+    string,
+    ReplyDraft & { editedByHuman: boolean; status: "draft" | "simulated_sent" }
+  >();
   let nextId = 1;
 
   const store: PipelineStore = {
@@ -56,9 +59,16 @@ export function createMemoryPipelineStore(initial: PipelineCase[]) {
       if (!c) throw new Error("unknown case");
       Object.assign(c.patch, patch);
     },
-    async saveReply(id, reply) {
-      if (replies.get(id)?.editedByHuman) return;
-      replies.set(id, { ...reply, editedByHuman: false });
+    async saveReply(id, reply, { sent }) {
+      const existing = replies.get(id);
+      if (existing && (existing.editedByHuman || existing.status !== "draft")) {
+        return;
+      }
+      replies.set(id, {
+        ...reply,
+        editedByHuman: false,
+        status: sent ? "simulated_sent" : "draft",
+      });
     },
   };
 

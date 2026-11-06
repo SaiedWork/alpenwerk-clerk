@@ -118,7 +118,7 @@ describe("runPipeline", () => {
     ]);
     expect(events(id).every((e) => e.durationMs !== null)).toBe(true);
     expect(caseState(id)).toMatchObject({
-      status: "REPLY_READY",
+      status: "DONE",
       intent: "bank_change",
       decision: "AUTO_EXECUTE",
       reasonCodes: [],
@@ -205,7 +205,7 @@ describe("runPipeline", () => {
       [7, "reply", "succeeded"],
     ]);
     expect(analyzeKeyCalls).toHaveBeenCalledTimes(1);
-    expect(caseState(id)).toMatchObject({ status: "REPLY_READY", error: null });
+    expect(caseState(id)).toMatchObject({ status: "DONE", error: null });
   });
 
   it("ignores a stale started row left by a crashed invocation", async () => {
@@ -285,7 +285,7 @@ describe("execute step", () => {
       step: "execute",
       status: "succeeded",
     });
-    expect(caseState(id).status).toBe("REPLY_READY");
+    expect(caseState(id).status).toBe("DONE");
   });
 
   it("skips REPLY_ONLY cases and never calls the writer", async () => {
@@ -298,7 +298,7 @@ describe("execute step", () => {
       status: "skipped",
       payload: { reason: "NO_ACTION" },
     });
-    expect(caseState(id).status).toBe("REPLY_READY");
+    expect(caseState(id).status).toBe("DONE");
     expect(writer!.updateAddress).not.toHaveBeenCalled();
     expect(writer!.updateBank).not.toHaveBeenCalled();
   });
@@ -310,7 +310,7 @@ describe("execute step", () => {
       status: "skipped",
       payload: { reason: "NO_BROWSER" },
     });
-    expect(caseState(id).status).toBe("REPLY_READY");
+    expect(caseState(id).status).toBe("DONE");
   });
 
   it("stops a NEEDS_REVIEW case before execute and runs it once approved", async () => {
@@ -376,7 +376,7 @@ describe("execute step", () => {
         ["reply", "succeeded"],
       ]);
       expect(caseState(id)).toMatchObject({
-        status: "REPLY_READY",
+        status: "DONE",
         error: null,
       });
     },
@@ -415,14 +415,14 @@ describe("verify step", () => {
       status: "succeeded",
       payload: { kind: "bank_change", verified: true },
     });
-    expect(caseState(id).status).toBe("REPLY_READY");
+    expect(caseState(id).status).toBe("DONE");
   });
 
   it("verifies an address change", async () => {
     const { deps, id, caseState, writer } = setup({ evalCase: byId("A01") });
     await runPipeline(id, deps);
     expect(writer!.readAddress).toHaveBeenCalledOnce();
-    expect(caseState(id).status).toBe("REPLY_READY");
+    expect(caseState(id).status).toBe("DONE");
   });
 
   it("still verifies when execute found everything already in place", async () => {
@@ -431,7 +431,7 @@ describe("verify step", () => {
     });
     await runPipeline(id, deps);
     expect(writer!.readBank).toHaveBeenCalledOnce();
-    expect(caseState(id).status).toBe("REPLY_READY");
+    expect(caseState(id).status).toBe("DONE");
   });
 
   it("fails with VERIFY_MISMATCH naming the fields, never the values", async () => {
@@ -502,7 +502,7 @@ describe("verify step", () => {
       ["verify", "succeeded"],
       ["reply", "succeeded"],
     ]);
-    expect(caseState(id)).toMatchObject({ status: "REPLY_READY", error: null });
+    expect(caseState(id)).toMatchObject({ status: "DONE", error: null });
   });
 
   it("is skipped when execute was skipped", async () => {
@@ -517,7 +517,7 @@ describe("verify step", () => {
         status: "skipped",
         payload: { reason: "NOTHING_TO_VERIFY" },
       });
-      expect(caseState(id).status).toBe("REPLY_READY");
+      expect(caseState(id).status).toBe("DONE");
     }
   });
 
@@ -549,8 +549,8 @@ describe.skipIf(entries.length === 0).each(cases)("eval case $id", (c) => {
     expect(state.status).toBe(
       {
         NEEDS_REVIEW: "AWAITING_REVIEW",
-        AUTO_EXECUTE: "REPLY_READY",
-        REPLY_ONLY: "REPLY_READY",
+        AUTO_EXECUTE: "DONE",
+        REPLY_ONLY: "DONE",
       }[c.expected.decision],
     );
     const writes =
@@ -576,6 +576,7 @@ describe("runPipeline audit", () => {
       "step.evaluate.succeeded",
       "step.execute.succeeded",
       "step.verify.succeeded",
+      "reply.sent_simulated",
       "step.reply.succeeded",
     ]);
     expect(audit.every((r) => r.actor === "agent" && r.caseId === id)).toBe(
@@ -654,7 +655,7 @@ describe("reply step", () => {
       status: "succeeded",
       payload: { templateKey: key },
     });
-    expect(caseState(id).status).toBe("REPLY_READY");
+    expect(caseState(id).status).toBe("DONE");
   });
 
   it("fills the confirmation from validated params and masks the IBAN", async () => {
@@ -693,6 +694,35 @@ describe("reply step", () => {
     expect(reply(id)!.templateKey).toBe("bank_confirmed");
   });
 
+  it("sends the reply of a case without a human right away, and leaves a reviewed one as a draft", async () => {
+    const auto = setup({ evalCase: byId("A01"), audit: [] });
+    await runPipeline(auto.id, auto.deps);
+    expect(auto.reply(auto.id)!.status).toBe("simulated_sent");
+    expect(auto.caseState(auto.id).status).toBe("DONE");
+
+    const only = setup({ evalCase: byId("I01") });
+    await runPipeline(only.id, only.deps);
+    expect(only.reply(only.id)!.status).toBe("simulated_sent");
+
+    const reviewed = setup({ evalCase: byId("B04") });
+    await runPipeline(reviewed.id, reviewed.deps);
+    await runPipeline(reviewed.id, { ...reviewed.deps, approved: true });
+    expect(reviewed.reply(reviewed.id)!.status).toBe("draft");
+    expect(reviewed.caseState(reviewed.id).status).toBe("REPLY_READY");
+  });
+
+  it("a re-run never un-sends a sent reply", async () => {
+    const { deps, id, reply, store } = setup();
+    await runPipeline(id, deps);
+    await store.saveReply(
+      id,
+      { templateKey: "x", subject: "x", body: "x" },
+      { sent: false },
+    );
+    expect(reply(id)).toMatchObject({ status: "simulated_sent" });
+    expect(reply(id)!.templateKey).not.toBe("x");
+  });
+
   it("an approved termination is acknowledged, not confirmed", async () => {
     const { deps, id, reply } = setup({ evalCase: byId("T01") });
     await runPipeline(id, { ...deps, approved: true });
@@ -718,6 +748,7 @@ describe("reply step", () => {
       });
       expect(byStep("verify")).toMatchObject({ status: "skipped" });
       expect(reply(id)!.templateKey).toBe("rejected_by_reviewer");
+      expect(reply(id)!.status).toBe("draft");
       expect(caseState(id).status).toBe("REPLY_READY");
       expect(writer!.updateAddress).not.toHaveBeenCalled();
       expect(writer!.updateBank).not.toHaveBeenCalled();
@@ -763,7 +794,11 @@ describe("reply step", () => {
     await runPipeline(id, deps);
     const first = reply(id)!;
     markReplyEdited(id);
-    await store.saveReply(id, { templateKey: "x", subject: "x", body: "x" });
+    await store.saveReply(
+      id,
+      { templateKey: "x", subject: "x", body: "x" },
+      { sent: false },
+    );
     expect(reply(id)).toEqual(first);
     expect(events(id).filter((e) => e.step === "reply")).toHaveLength(1);
   });

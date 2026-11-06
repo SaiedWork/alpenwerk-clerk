@@ -1,4 +1,4 @@
-import { asc, eq, sql } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 import type { Db } from "@/db/client";
 import { caseEvents, cases, replies } from "@/db/schema/app";
 import type { PipelineStore } from "./types";
@@ -75,15 +75,19 @@ export function createDbPipelineStore(db: Db): PipelineStore {
         .where(eq(cases.id, caseId));
     },
 
-    async saveReply(caseId, reply) {
+    async saveReply(caseId, reply, { sent }) {
+      const status = sent ? "simulated_sent" : "draft";
       await db
         .insert(replies)
-        .values({ caseId, ...reply })
+        .values({ caseId, ...reply, status })
         .onConflictDoUpdate({
           target: replies.caseId,
-          set: reply,
-          // A human-edited reply is never overwritten by a re-run.
-          setWhere: eq(replies.editedByHuman, false),
+          set: { ...reply, status },
+          // Only an untouched draft is replaced: never an edited reply, never a sent one.
+          setWhere: and(
+            eq(replies.editedByHuman, false),
+            eq(replies.status, "draft"),
+          ),
         });
     },
   };

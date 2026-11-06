@@ -15,6 +15,9 @@ const STATUS_BY_CODE = {
   CASE_AWAITING_REVIEW: 409,
   CASE_FINISHED: 409,
   CASE_NOT_STUCK: 409,
+  CASE_NOT_REPLY_READY: 409,
+  REPLY_NOT_FOUND: 404,
+  REPLY_NOT_DRAFT: 409,
 } as const;
 
 /** Resumes a stuck or failed case. Idempotent: finished steps are never repeated. */
