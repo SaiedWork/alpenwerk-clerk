@@ -217,4 +217,28 @@ export const t = {
       },
     },
   },
+  // Console shell: brand, navigation, footer and shared labels.
+  console: {
+    brand: "Alpenwerk Digital Clerk",
+    brandSub: "Digitale Sachbearbeiterin",
+    navLabel: "Navigation",
+    openMenu: "Menü öffnen",
+    footer: "Demo mit synthetischen Daten. Daten werden täglich zurückgesetzt.",
+    nav: {
+      cases: "Fälle",
+      inbox: "Posteingang",
+      reviews: "Freigaben",
+      kpi: "Kennzahlen",
+      audit: "Audit",
+      about: "Über",
+      legacy: "Altsystem öffnen",
+    },
+    cases: {
+      title: "Fälle",
+      description: "Alle eingegangenen Anfragen und ihr Bearbeitungsstand.",
+      emptyTitle: "Noch keine Fälle",
+      emptyHint:
+        "Sobald eine E-Mail eingeht, erscheint sie hier. Im Posteingang lässt sich eine Beispiel-E-Mail senden.",
+    },
+  },
 } as const;
