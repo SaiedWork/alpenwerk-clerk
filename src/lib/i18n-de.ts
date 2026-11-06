@@ -20,6 +20,53 @@ export const t = {
     failed:
       "Die KI-Analyse ist fehlgeschlagen. Der Fall kann später erneut versucht werden.",
   },
+  // Customer-facing reply templates (formal "Sie"). `{name}` placeholders are filled by
+  // `render` in `src/agent/templates`. Wording never names a rule or a failed identity check.
+  replies: {
+    greeting: "Sehr geehrte Damen und Herren,",
+    signature: "Mit freundlichen Grüßen\nLena\nAlpenwerk Leben AG",
+    missingFields: {
+      street: "Straße",
+      house_no: "Hausnummer",
+      plz: "Postleitzahl (fünfstellig)",
+      city: "Ort",
+      iban: "eine gültige IBAN",
+    },
+    templates: {
+      address_confirmed: {
+        subject: "Ihre Adressänderung (Versicherungsnummer {policyNo})",
+        body: "wir haben Ihre neue Anschrift zu Ihrer Versicherungsnummer {policyNo} erfasst:\n\n{street} {houseNo}\n{plz} {city}\n\nBitte prüfen Sie die Angaben. Sollte etwas nicht stimmen, antworten Sie einfach auf diese E-Mail.",
+      },
+      bank_confirmed: {
+        subject: "Ihre neue Bankverbindung (Versicherungsnummer {policyNo})",
+        body: "wir haben Ihre neue Bankverbindung zu Ihrer Versicherungsnummer {policyNo} hinterlegt. Die neue IBAN lautet {maskedIban}. Künftige Beiträge werden von diesem Konto eingezogen.\n\nSollten Sie diese Änderung nicht veranlasst haben, melden Sie sich bitte umgehend bei uns.",
+      },
+      request_missing_info: {
+        subject: "Ihre Anfrage: Wir benötigen weitere Angaben",
+        body: "für die Bearbeitung Ihrer Anfrage benötigen wir noch Folgendes:\n\n{missingList}\n\nBitte antworten Sie mit den vollständigen Angaben auf diese E-Mail. Bis dahin haben wir an Ihren Vertragsdaten nichts geändert.",
+      },
+      bank_same_iban: {
+        subject: "Ihre Anfrage zur Bankverbindung",
+        body: "die von Ihnen genannte Bankverbindung ist bei uns bereits hinterlegt. Eine Änderung ist daher nicht nötig.",
+      },
+      unknown_policy: {
+        subject: "Ihre Anfrage",
+        body: "wir konnten Ihre Anfrage keiner Police zuordnen. Bitte senden Sie uns Ihr Anliegen erneut und nennen Sie dabei die Versicherungsnummer aus Ihren Vertragsunterlagen.",
+      },
+      escalated_ack: {
+        subject: "Ihre Anfrage ist bei uns eingegangen",
+        body: "vielen Dank für Ihre Nachricht. Ihr Anliegen wird von einer Kollegin oder einem Kollegen geprüft. Wir melden uns bei Ihnen, sobald die Prüfung abgeschlossen ist.",
+      },
+      termination_received: {
+        subject: "Ihre Nachricht zur Versicherungsnummer {policyNo}",
+        body: "wir bestätigen den Eingang Ihrer Nachricht zu Ihrer Versicherungsnummer {policyNo}. Kündigungen werden bei uns immer persönlich geprüft; bisher wurde nichts verändert.\n\nBitte beachten Sie: Eine vorzeitige Kündigung kann finanzielle Nachteile haben, zum Beispiel weil ein ausgezahlter Rückkaufswert niedriger sein kann als die eingezahlten Beiträge und der Versicherungsschutz endet.\n\nWir melden uns mit den nächsten Schritten. Bis dahin können Sie Ihre Anfrage jederzeit durch eine Antwort auf diese E-Mail zurückziehen.",
+      },
+      rejected_by_reviewer: {
+        subject: "Ihre Anfrage",
+        body: "vielen Dank für Ihre Nachricht. Wir haben Ihr Anliegen geprüft und können es in dieser Form leider nicht bearbeiten. Es wurden keine Änderungen vorgenommen.\n\nBei Fragen antworten Sie bitte auf diese E-Mail.",
+      },
+    },
+  },
   // Customer-neutral internal explanations of rule results, shown as "Warum?" in the console.
   rules: {
     ID_POLICY_NOT_FOUND:
