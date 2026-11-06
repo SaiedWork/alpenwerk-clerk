@@ -13,7 +13,7 @@ const intent = z.enum([
   "other",
 ]);
 
-const normalizedExtractionSchema = z.object({
+export const normalizedExtractionSchema = z.object({
   policyNo: z.string().nullable(),
   language: z.enum(["de", "en", "other"]),
   intents: z.array(intent),
