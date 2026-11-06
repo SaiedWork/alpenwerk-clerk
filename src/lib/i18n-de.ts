@@ -418,6 +418,102 @@ export const t = {
       },
       languages: { de: "Deutsch", en: "Englisch", other: "Andere" },
     },
+    inbox: {
+      title: "Posteingang",
+      description:
+        "Hier lässt sich eine E-Mail an den Clerk schicken, als wäre sie beim Versicherer eingegangen. Alle Daten sind erfunden.",
+      formTitle: "E-Mail senden",
+      sampleLabel: "Beispiel wählen",
+      custom: "Eigene E-Mail schreiben",
+      customHint:
+        "Eigene Texte analysiert die Live-KI. Das ist pro Besucher begrenzt.",
+      from: "Absender",
+      subject: "Betreff",
+      body: "Text",
+      send: "An den Clerk senden",
+      sending: "Wird gesendet …",
+      recorded: "Aufgezeichnete Antwort",
+      live: "Live-KI-Aufruf",
+      liveOff: "Live-KI ist hier aus",
+      budget: "Heute noch {remaining} von {cap} Live-KI-Aufrufen frei.",
+      budgetOff:
+        "Live-KI ist in dieser Umgebung ausgeschaltet; es funktionieren nur die Beispiele mit aufgezeichneter Antwort.",
+      limits:
+        "Pro Besucher: höchstens {submit} E-Mails pro Tag, davon {live} mit Live-KI pro Stunde.",
+      groups: {
+        auto: "Wird automatisch ausgeführt",
+        reply: "Rückfrage an den Absender",
+        review: "Ein Mensch prüft",
+        other: "Sonstiges",
+      },
+      samples: {
+        B01: {
+          title: "Bankverbindung ändern (formell)",
+          hint: "Erwartet: Alle Regeln erfüllt, der Clerk ändert die Bankverbindung im Altsystem.",
+        },
+        A01: {
+          title: "Adresse ändern (formell)",
+          hint: "Erwartet: Alle Regeln erfüllt, der Clerk ändert die Adresse im Altsystem.",
+        },
+        B02: {
+          title: "Neue Kontonummer (locker formuliert)",
+          hint: "Erwartet: Trotz lockerem Ton und Kleinschreibung wird die IBAN richtig erkannt.",
+        },
+        X03: {
+          title: "Bankverbindung auf Englisch",
+          hint: "Erwartet: Die Sprache spielt keine Rolle, die Antwort geht auf Deutsch raus.",
+        },
+        A02: {
+          title: "Adresse ohne Hausnummer",
+          hint: "Erwartet: Nichts wird geändert; der Absender wird um die Hausnummer gebeten.",
+        },
+        B03: {
+          title: "IBAN mit Zahlendreher",
+          hint: "Erwartet: Die Prüfziffer stimmt nicht; der Absender wird um eine korrekte IBAN gebeten.",
+        },
+        I01: {
+          title: "Unbekannte Versicherungsnummer",
+          hint: "Erwartet: Die Police gibt es nicht; der Absender wird um Prüfung gebeten.",
+        },
+        T01: {
+          title: "Kündigung",
+          hint: "Erwartet: Kündigungen führt der Clerk nie selbst aus; ein Mensch entscheidet.",
+        },
+        B04: {
+          title: "Konto einer anderen Person",
+          hint: "Erwartet: Kontoinhaber und Versicherungsnehmer weichen ab; ein Mensch prüft.",
+        },
+        B07: {
+          title: "Umzug und neues Konto in einer Mail",
+          hint: "Erwartet: Zwei Änderungen auf einmal sind riskant; ein Mensch prüft.",
+        },
+        X02: {
+          title: "Manipulationsversuch im Text",
+          hint: "Erwartet: Anweisungen im E-Mail-Text werden ignoriert; ein Mensch prüft.",
+        },
+        X01: {
+          title: "Beschwerde",
+          hint: "Erwartet: Keine Änderung gewünscht; ein Mensch kümmert sich.",
+        },
+        X04: {
+          title: "Spam",
+          hint: "Erwartet: Kein Anliegen erkannt; ein Mensch sieht kurz drauf.",
+        },
+      },
+      errors: {
+        INVALID_INPUT:
+          "Bitte eine gültige Absenderadresse und einen Text eingeben (höchstens 4000 Zeichen).",
+        RATE_LIMIT_DAILY: "Das Tageslimit für gesendete E-Mails ist erreicht.",
+        RATE_LIMIT_LIVE:
+          "Das Stundenlimit für Live-KI ist erreicht. Die Beispiele funktionieren weiterhin.",
+        LIVE_DISABLED:
+          "Eigene Texte brauchen die Live-KI, die hier ausgeschaltet ist. Bitte ein Beispiel verwenden.",
+        NOT_CONFIGURED:
+          "Der Posteingang ist in dieser Umgebung nicht eingerichtet.",
+        UNKNOWN: "Das hat nicht geklappt. Bitte später erneut versuchen.",
+        retryAfter: "Wieder möglich ab {time}.",
+      },
+    },
     reviews: {
       title: "Freigaben",
       description:
