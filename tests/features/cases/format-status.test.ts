@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { caseStatuses } from "@/db/schema/app";
 import { formatHandlingTime } from "@/features/cases/format";
-import { isInFlight } from "@/features/cases/status";
+import { isBeingProcessed, isInFlight } from "@/features/cases/status";
+import { STUCK_AFTER_MS } from "@/features/review/server/review-case";
 
 describe("formatHandlingTime", () => {
   it.each([
@@ -43,5 +44,45 @@ describe("isInFlight", () => {
     for (const status of rest) {
       expect(isInFlight({ status, decision: null })).toBe(true);
     }
+  });
+});
+
+describe("isBeingProcessed", () => {
+  const now = new Date("2026-11-06T12:00:00Z");
+  const ago = (ms: number) => new Date(now.getTime() - ms);
+
+  it("is true for a recently updated case in flight", () => {
+    expect(
+      isBeingProcessed(
+        {
+          status: "EXECUTING",
+          decision: "AUTO_EXECUTE",
+          updatedAt: ago(5_000),
+        },
+        now,
+      ),
+    ).toBe(true);
+  });
+
+  it("stops once nothing happened for the stuck window, so pages stop polling", () => {
+    expect(
+      isBeingProcessed(
+        {
+          status: "EXECUTING",
+          decision: "AUTO_EXECUTE",
+          updatedAt: ago(STUCK_AFTER_MS),
+        },
+        now,
+      ),
+    ).toBe(false);
+  });
+
+  it("is false for cases that are not in flight at all", () => {
+    expect(
+      isBeingProcessed(
+        { status: "DONE", decision: "AUTO_EXECUTE", updatedAt: ago(1_000) },
+        now,
+      ),
+    ).toBe(false);
   });
 });

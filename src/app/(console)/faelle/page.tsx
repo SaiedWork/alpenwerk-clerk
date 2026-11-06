@@ -12,7 +12,7 @@ import {
   parseCasesQuery,
 } from "@/features/cases/schemas/list-query";
 import { listCases } from "@/features/cases/server/list-cases";
-import { isInFlight } from "@/features/cases/status";
+import { isBeingProcessed } from "@/features/cases/status";
 import { t } from "@/lib/i18n-de";
 
 type Props = {
@@ -47,7 +47,9 @@ export default async function CasesPage({ searchParams }: Props) {
       ) : (
         <CasesTable list={list} query={query} />
       )}
-      <AutoRefresh active={list.rows.some(isInFlight)} />
+      <AutoRefresh
+        active={list.rows.some((row) => isBeingProcessed(row, new Date()))}
+      />
     </div>
   );
 }

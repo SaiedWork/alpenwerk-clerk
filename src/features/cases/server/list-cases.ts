@@ -7,6 +7,7 @@ export type CaseListRow = Pick<
   typeof cases.$inferSelect,
   | "id"
   | "receivedAt"
+  | "updatedAt"
   | "fromEmail"
   | "subject"
   | "intent"
@@ -44,6 +45,7 @@ export async function listCases(
     .select({
       id: cases.id,
       receivedAt: cases.receivedAt,
+      updatedAt: cases.updatedAt,
       fromEmail: cases.fromEmail,
       subject: cases.subject,
       intent: cases.intent,

@@ -114,6 +114,9 @@ export const t = {
     },
   },
   legacy: {
+    notFoundTitle: "Seite nicht gefunden",
+    notFoundHint: "Diese Adresse gibt es im Altsystem nicht.",
+    toSearch: "Zur Suche",
     systemName: "Alpenwerk Leben AG — Bestandsführung v4.2",
     demoBanner: "Demo-System mit synthetischen Daten",
     nav: { search: "Suche", logout: "Abmelden" },
@@ -235,6 +238,22 @@ export const t = {
       legacy: "Altsystem öffnen",
     },
     close: "Schließen",
+    errors: {
+      pageNotFoundTitle: "Seite nicht gefunden",
+      pageNotFoundHint:
+        "Diese Adresse gibt es nicht. Vielleicht wurde sie falsch eingegeben oder die Seite ist umgezogen.",
+      errorTitle: "Das hat nicht geklappt",
+      errorHint:
+        "Beim Laden der Seite ist etwas schiefgegangen, oder der Dienst ist gerade nicht erreichbar. Die Daten sind nicht betroffen.",
+      retry: "Erneut versuchen",
+      reference: "Fehlerkennung: {digest}",
+      toCases: "Zu den Fällen",
+    },
+    sidebar: {
+      title: "Navigation",
+      description: "Hauptnavigation der Konsole.",
+      toggle: "Seitenleiste umschalten",
+    },
     toggleTheme: "Design wechseln (hell/dunkel)",
     status: {
       RECEIVED: "Eingegangen",

@@ -4,7 +4,7 @@ import type { CaseStatus, EventStatus } from "@/agent/pipeline/types";
 import type { Decision, Intent } from "@/agent/rules/types";
 import type { replyStatuses } from "@/db/schema/app";
 import { STUCK_AFTER_MS } from "@/features/review/server/review-case";
-import { isInFlight } from "../status";
+import { isBeingProcessed } from "../status";
 import { extractedFields, type ExtractedField } from "./extracted-fields";
 import { previewReply, type ReplyPreview } from "./preview-reply";
 import { summarizeEvent } from "./summarize-event";
@@ -147,6 +147,9 @@ export function buildCaseView(rows: CaseDetailRows, now: Date): CaseView {
     replyPreview:
       c.status === "AWAITING_REVIEW" ? previewReply(rows.events) : null,
     canResume: canResumeCase(c.status, c.updatedAt, now),
-    inFlight: isInFlight({ status: c.status, decision: c.decision }),
+    inFlight: isBeingProcessed(
+      { status: c.status, decision: c.decision, updatedAt: c.updatedAt },
+      now,
+    ),
   };
 }

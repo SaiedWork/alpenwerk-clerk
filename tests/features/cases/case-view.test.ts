@@ -202,4 +202,14 @@ describe("buildCaseView", () => {
       true,
     );
   });
+
+  it("stops reporting in flight once the case has been idle for the stuck window", () => {
+    const stale = rows({
+      status: "EXECUTING",
+      updatedAt: new Date(NOW.getTime() - STUCK_AFTER_MS),
+    });
+    const view = buildCaseView(stale, NOW);
+    expect(view.inFlight).toBe(false);
+    expect(view.canResume).toBe(true);
+  });
 });
