@@ -2,6 +2,7 @@ import { getModel } from "@/agent/llm/provider";
 import { createDbStores } from "@/agent/llm/stores";
 import { createDbPipelineStore } from "@/agent/pipeline/db-store";
 import { runPipeline } from "@/agent/pipeline/runner";
+import { createDbAuditSink } from "@/db/audit";
 import { getDb } from "@/db/client";
 import { createDbReviewStore } from "@/features/review/server/db-review-store";
 import { env } from "@/lib/env";
@@ -28,6 +29,7 @@ export async function runCase(caseId: string): Promise<void> {
       writer: legacy.writer,
       readback: legacy.readback,
       approved,
+      audit: createDbAuditSink(db),
       llm: () => ({
         ...stores,
         model: getModel({

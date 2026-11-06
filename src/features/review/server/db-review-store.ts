@@ -1,4 +1,5 @@
 import { and, eq } from "drizzle-orm";
+import { appendAudit } from "@/db/audit";
 import type { Db } from "@/db/client";
 import { cases, reviews } from "@/db/schema/app";
 import { withTransaction } from "@/db/tx";
@@ -33,6 +34,16 @@ export function createDbReviewStore(db: Db): ReviewStore {
           decision: input.decision,
           note: input.note,
           reviewerLabel: input.reviewerLabel,
+        });
+        // Same transaction: a review without its audit row cannot exist.
+        await appendAudit(tx, {
+          caseId: input.caseId,
+          actor: "human",
+          action: `review.${input.decision === "approve" ? "approved" : "rejected"}`,
+          details: {
+            reviewerLabel: input.reviewerLabel,
+            hasNote: input.note !== null,
+          },
         });
         return "ok";
       });

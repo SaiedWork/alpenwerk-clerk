@@ -4,6 +4,7 @@ import type { NormalizedExtraction } from "@/agent/llm/normalize";
 import type { ResolveDeps } from "@/agent/llm/resolve";
 import type { NormalizedParams } from "@/agent/rules/engine";
 import type { Decision, LegacySnapshot } from "@/agent/rules/types";
+import type { AuditSink } from "@/db/audit";
 import type { caseStatuses, eventStatuses } from "@/db/schema/app";
 
 export type CaseStatus = (typeof caseStatuses)[number];
@@ -74,6 +75,8 @@ export interface PipelineDeps {
    * gate sets it. Never set for automatic runs.
    */
   approved?: boolean;
+  /** Receives one audit row per finished or failed step. Optional: tests and tools may omit it. */
+  audit?: AuditSink;
   /** Lazy so a missing API key becomes a recorded step failure, not a crash. */
   llm: () => ResolveDeps;
   now?: () => Date;

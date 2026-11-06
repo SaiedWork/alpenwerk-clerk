@@ -139,8 +139,9 @@ export const caseEvents = appSchema.table(
 );
 
 /**
- * Append-only audit trail. The trigger that rejects UPDATE/DELETE is added with the
- * audit task; `case_id` is nullable for system-level actions such as the daily reset.
+ * Append-only audit trail. Migration 0001 adds a trigger that rejects UPDATE and DELETE
+ * (TRUNCATE by the reset job is not blocked). Write rows through `appendAudit` in `db/audit.ts`;
+ * `case_id` is nullable for system-level actions such as the daily reset.
  */
 export const auditLog = appSchema.table(
   "audit_log",

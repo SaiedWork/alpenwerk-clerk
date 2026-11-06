@@ -105,6 +105,18 @@ export async function runPipeline(
         payload: result.payload,
         durationMs,
       });
+      await deps.audit?.append({
+        caseId,
+        actor: "agent",
+        action: `step.${name}.${result.status}`,
+        details: {
+          step: name,
+          status: result.status,
+          durationMs,
+          decision: result.casePatch.decision,
+          reasonCodes: result.casePatch.reasonCodes,
+        },
+      });
       doneByStep.set(name, {
         id: eventId,
         seq: 0,
@@ -126,6 +138,17 @@ export async function runPipeline(
       await store.updateCase(caseId, {
         status: "FAILED",
         error: { ...failure, step: name },
+      });
+      await deps.audit?.append({
+        caseId,
+        actor: "agent",
+        action: `step.${name}.failed`,
+        details: {
+          step: name,
+          status: "failed",
+          durationMs,
+          code: failure.code,
+        },
       });
       return { outcome: "failed", step: name, code: failure.code };
     }

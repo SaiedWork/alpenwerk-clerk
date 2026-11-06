@@ -13,6 +13,7 @@ import { ReplayMissError } from "@/agent/llm/errors";
 import type { SeedCacheEntry } from "@/agent/llm/seed-file";
 import { runPipeline } from "@/agent/pipeline/runner";
 import type { PipelineDeps } from "@/agent/pipeline/types";
+import type { AuditEntry } from "@/db/audit";
 import { loadEvalCases } from "../../../evals/loader";
 import {
   createMemoryStores,
@@ -64,6 +65,7 @@ function setup(
     /** `null`: no writer at all (seed mode). */
     writer?: ReturnType<typeof recordingWriter> | null;
     approved?: boolean;
+    audit?: AuditEntry[];
   } = {},
 ) {
   const writer =
@@ -90,6 +92,9 @@ function setup(
     writer,
     readback: writer,
     approved: options.approved,
+    audit: options.audit && {
+      append: async (entry) => void options.audit!.push(structuredClone(entry)),
+    },
     llm: () => ({ ...stores, model: null, modelName: "replay", dailyCap: 0 }),
     now: () => EVAL_NOW,
   };
@@ -547,3 +552,73 @@ describe.skipIf(entries.length === 0).each(cases)("eval case $id", (c) => {
 });
 
 void computeCacheKey;
+
+describe("runPipeline audit", () => {
+  const actions = (rows: AuditEntry[]) => rows.map((r) => r.action);
+
+  it("writes one agent row per step, with decision and reason codes on evaluate", async () => {
+    const audit: AuditEntry[] = [];
+    const { deps, id } = setup({ audit });
+    await runPipeline(id, deps);
+
+    expect(actions(audit)).toEqual([
+      "step.analyze.succeeded",
+      "step.identify.succeeded",
+      "step.evaluate.succeeded",
+      "step.execute.succeeded",
+      "step.verify.succeeded",
+    ]);
+    expect(audit.every((r) => r.actor === "agent" && r.caseId === id)).toBe(
+      true,
+    );
+    expect(audit[2].details).toMatchObject({
+      step: "evaluate",
+      decision: "AUTO_EXECUTE",
+      reasonCodes: [],
+    });
+  });
+
+  it("stops after evaluate for a case awaiting review, and a resume adds only the new steps", async () => {
+    const audit: AuditEntry[] = [];
+    const { deps, id } = setup({
+      evalCase: cases.find((c) => c.id === "B04")!,
+      audit,
+    });
+    await runPipeline(id, deps);
+    expect(actions(audit)).toEqual([
+      "step.analyze.succeeded",
+      "step.identify.succeeded",
+      "step.evaluate.succeeded",
+    ]);
+    await runPipeline(id, { ...deps, approved: true });
+    expect(actions(audit).slice(3)).toEqual([
+      "step.execute.succeeded",
+      "step.verify.succeeded",
+    ]);
+  });
+
+  it("records a failed step with its code and nothing else", async () => {
+    const audit: AuditEntry[] = [];
+    const { deps, id } = setup({ entries: [], audit });
+    await runPipeline(id, deps);
+    expect(audit).toHaveLength(1);
+    expect(audit[0]).toMatchObject({
+      action: "step.analyze.failed",
+      details: { step: "analyze", status: "failed", code: "REPLAY_MISS" },
+    });
+  });
+
+  it("does not swallow an audit failure: the error propagates and the case is FAILED", async () => {
+    const { deps, id, caseState } = setup();
+    const failing = {
+      ...deps,
+      audit: {
+        append: async () => {
+          throw new Error("audit down");
+        },
+      },
+    };
+    await expect(runPipeline(id, failing)).rejects.toThrow("audit down");
+    expect(caseState(id).status).toBe("FAILED");
+  });
+});

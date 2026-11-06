@@ -1,5 +1,6 @@
 import { getDb, type Db } from "@/db/client";
-import { cases } from "@/db/schema/app";
+import { auditEntrySchema } from "@/db/audit";
+import { auditLog, cases } from "@/db/schema/app";
 import { caseLogger } from "@/lib/logger";
 import type { InboundEmail } from "../schemas/inbound";
 
@@ -15,17 +16,27 @@ export async function ingestEmail(
   source: CaseSource,
   db: Db = getDb(),
 ): Promise<{ caseId: string }> {
-  const [row] = await db
-    .insert(cases)
-    .values({
+  const id = crypto.randomUUID();
+  // One batch = one transaction: a case never exists without its `case.received` audit row.
+  await db.batch([
+    db.insert(cases).values({
+      id,
       fromEmail: email.from,
       subject: email.subject,
       body: email.body,
       source,
-    })
-    .returning({ id: cases.id });
+    }),
+    db.insert(auditLog).values(
+      auditEntrySchema.parse({
+        caseId: id,
+        actor: "system",
+        action: "case.received",
+        details: { source },
+      }),
+    ),
+  ]);
 
-  caseLogger(row.id).info(
+  caseLogger(id).info(
     {
       source,
       subjectChars: email.subject.length,
@@ -33,5 +44,5 @@ export async function ingestEmail(
     },
     "case received",
   );
-  return { caseId: row.id };
+  return { caseId: id };
 }
