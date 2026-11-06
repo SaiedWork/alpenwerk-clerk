@@ -8,6 +8,7 @@ import { signBody } from "@/lib/hmac";
 
 vi.mock("@/lib/env", () => ({ env: { INBOUND_WEBHOOK_SECRET: "s3cret" } }));
 vi.mock("@/features/inbox/server/ingest", () => ({ ingestEmail: vi.fn() }));
+vi.mock("@/features/inbox/server/run-case", () => ({ runCase: vi.fn() }));
 vi.mock("@/db/client", () => ({ getDb: vi.fn() }));
 
 const secret = "s3cret";
@@ -32,14 +33,16 @@ function setup() {
   const releaseSignature = vi.fn(async (sig: string) => {
     claimed.delete(sig);
   });
+  const schedule = vi.fn<InboundDeps["schedule"]>();
   const deps: InboundDeps = {
+    schedule,
     secret,
     now: () => now,
     ingest,
     claimSignature,
     releaseSignature,
   };
-  return { ingest, deps, claimSignature, releaseSignature };
+  return { ingest, deps, claimSignature, releaseSignature, schedule };
 }
 
 function signed(payload: unknown, headers: Record<string, string> = {}) {
@@ -87,6 +90,16 @@ describe("handleInboundEmail", () => {
       json: { caseId: "case-1" },
     });
     expect(ingest).toHaveBeenCalledWith(email);
+  });
+
+  it("starts the pipeline for the new case, and only then", async () => {
+    const { deps, schedule } = setup();
+    await call(signed(email), deps);
+    expect(schedule).toHaveBeenCalledExactlyOnceWith("case-1");
+
+    schedule.mockClear();
+    await call(signed(email, { "x-signature": "bad" }), deps);
+    expect(schedule).not.toHaveBeenCalled();
   });
 
   it.each([

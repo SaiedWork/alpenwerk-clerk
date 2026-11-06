@@ -2,6 +2,11 @@
 // The legacy section and the rule explanations exist so far; the console adds its own later.
 
 export const t = {
+  // Failure message stored on a case when a pipeline step fails for a non-LLM reason.
+  pipeline: {
+    stepFailed:
+      "Die Verarbeitung ist fehlgeschlagen. Der Fall kann erneut versucht werden.",
+  },
   // User-facing messages for failures of the LLM step.
   llm: {
     dailyCapReached:

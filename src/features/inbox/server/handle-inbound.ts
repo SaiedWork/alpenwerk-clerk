@@ -1,3 +1,4 @@
+import { after } from "next/server";
 import { getDb } from "@/db/client";
 import { createDbRateLimitStore } from "@/db/rate-limit-store";
 import { env } from "@/lib/env";
@@ -10,6 +11,7 @@ import {
 import { claimOnce, releaseClaim } from "@/lib/rate-limit";
 import { inboundEmailSchema, type InboundEmail } from "../schemas/inbound";
 import { ingestEmail } from "./ingest";
+import { runCase } from "./run-case";
 
 /** Generous upper bound for a valid request (4000 + 200 chars, JSON escaping, headroom). */
 const MAX_RAW_BYTES = 32_768;
@@ -21,6 +23,8 @@ export interface InboundDeps {
   /** `true` for the first request with this signature, `false` for a replay. */
   claimSignature: (signature: string) => Promise<boolean>;
   releaseSignature: (signature: string) => Promise<void>;
+  /** Starts the pipeline after the response is sent. Must not throw. */
+  schedule: (caseId: string) => void;
 }
 
 // Hex is case-insensitive, so the key is lowercased: an upper-case copy is the same signature.
@@ -34,6 +38,7 @@ const defaultDeps = (): InboundDeps => {
     ingest: (email) => ingestEmail(email, "webhook"),
     claimSignature: (signature) => claimOnce(store, replayKey(signature)),
     releaseSignature: (signature) => releaseClaim(store, replayKey(signature)),
+    schedule: (caseId) => after(() => runCase(caseId)),
   };
 };
 
@@ -85,6 +90,7 @@ export async function handleInboundEmail(
 
   try {
     const { caseId } = await deps.ingest(parsed.data);
+    deps.schedule(caseId);
     return Response.json({ caseId }, { status: 201 });
   } catch (error) {
     await deps.releaseSignature(signature);

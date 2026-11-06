@@ -1,0 +1,64 @@
+import type {
+  CasePatch,
+  PipelineCase,
+  PipelineStore,
+  StoredEvent,
+} from "@/agent/pipeline/types";
+
+/** In-memory `PipelineStore` for tests: same contract as the Drizzle store, no database. */
+export function createMemoryPipelineStore(initial: PipelineCase[]) {
+  const cases = new Map(
+    initial.map((c) => [c.id, { ...c, patch: {} as CasePatch }]),
+  );
+  const events: (StoredEvent & { caseId: string })[] = [];
+  let nextId = 1;
+
+  const store: PipelineStore = {
+    async getCase(id) {
+      const c = cases.get(id);
+      return c
+        ? { id: c.id, fromEmail: c.fromEmail, subject: c.subject, body: c.body }
+        : null;
+    },
+    async listEvents(id) {
+      return events
+        .filter((e) => e.caseId === id)
+        .map((e) => structuredClone(e));
+    },
+    async startEvent(caseId, step) {
+      const seq = events.filter((e) => e.caseId === caseId).length + 1;
+      const event = {
+        id: nextId++,
+        caseId,
+        seq,
+        step,
+        status: "started" as const,
+        payload: null,
+        durationMs: null,
+      };
+      events.push(event);
+      return { eventId: event.id };
+    },
+    async finishEvent(eventId, result) {
+      const event = events.find((e) => e.id === eventId);
+      if (!event) throw new Error("unknown event");
+      Object.assign(event, {
+        status: result.status,
+        // Like jsonb: what comes back has been through JSON.
+        payload: JSON.parse(JSON.stringify(result.payload)),
+        durationMs: result.durationMs,
+      });
+    },
+    async updateCase(id, patch) {
+      const c = cases.get(id);
+      if (!c) throw new Error("unknown case");
+      Object.assign(c.patch, patch);
+    },
+  };
+
+  return {
+    store,
+    events: (id: string) => events.filter((e) => e.caseId === id),
+    caseState: (id: string) => cases.get(id)?.patch ?? {},
+  };
+}

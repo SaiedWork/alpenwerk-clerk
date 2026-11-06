@@ -1,0 +1,87 @@
+import type { LegacySnapshotReader } from "@/agent/executor/snapshot-reader";
+import type { NormalizedExtraction } from "@/agent/llm/normalize";
+import type { ResolveDeps } from "@/agent/llm/resolve";
+import type { Decision, LegacySnapshot } from "@/agent/rules/types";
+import type { caseStatuses, eventStatuses } from "@/db/schema/app";
+
+export type CaseStatus = (typeof caseStatuses)[number];
+export type EventStatus = (typeof eventStatuses)[number];
+
+export const STEP_NAMES = ["analyze", "identify", "evaluate"] as const;
+export type StepName = (typeof STEP_NAMES)[number];
+
+/** The case fields the pipeline reads. */
+export interface PipelineCase {
+  id: string;
+  fromEmail: string;
+  subject: string;
+  body: string;
+}
+
+/** One row of the timeline. */
+export interface StoredEvent {
+  id: number;
+  seq: number;
+  step: string;
+  status: EventStatus;
+  payload: unknown;
+  durationMs: number | null;
+}
+
+/** Case columns a step may write. */
+export interface CasePatch {
+  status?: CaseStatus;
+  intent?: NormalizedExtraction["primaryIntent"];
+  confidence?: number;
+  extracted?: unknown;
+  policyNo?: string | null;
+  decision?: Decision;
+  reasonCodes?: string[];
+  handlingMs?: number;
+  error?: { code: string; messageDe: string; step: string } | null;
+}
+
+/** Persistence port. The Drizzle implementation is thin; all logic stays in the runner. */
+export interface PipelineStore {
+  getCase(caseId: string): Promise<PipelineCase | null>;
+  listEvents(caseId: string): Promise<StoredEvent[]>;
+  /** Inserts a `started` row with the next `seq`. */
+  startEvent(caseId: string, step: StepName): Promise<{ eventId: number }>;
+  finishEvent(
+    eventId: number,
+    result: { status: EventStatus; payload: unknown; durationMs: number },
+  ): Promise<void>;
+  updateCase(caseId: string, patch: CasePatch): Promise<void>;
+}
+
+export interface PipelineDeps {
+  store: PipelineStore;
+  reader: LegacySnapshotReader;
+  /** Lazy so a missing API key becomes a recorded step failure, not a crash. */
+  llm: () => ResolveDeps;
+  now?: () => Date;
+}
+
+/** What earlier steps produced; rebuilt from the stored event payloads on every run. */
+export interface PipelineState {
+  extraction?: NormalizedExtraction;
+  /** `undefined`: identify has not run. `null`: it ran and the policy was not found. */
+  snapshot?: LegacySnapshot | null;
+}
+
+export interface StepContext {
+  case: PipelineCase;
+  state: PipelineState;
+  deps: PipelineDeps;
+  now: Date;
+}
+
+/** `skipped` means "nothing to do, and that is fine"; it counts as done. */
+export interface StepResult {
+  status: "succeeded" | "skipped";
+  /** Stored on the event row; later steps read their inputs from it. */
+  payload: unknown;
+  casePatch: CasePatch;
+}
+
+export type Step = (ctx: StepContext) => Promise<StepResult>;
