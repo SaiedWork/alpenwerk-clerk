@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ExternalLink } from "lucide-react";
@@ -14,7 +15,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
 } from "@/components/ui/sidebar";
 import { t } from "@/lib/i18n-de";
 import { isActivePath, NAV_ITEMS } from "./nav-items";
@@ -23,9 +23,22 @@ export function AppSidebar() {
   const pathname = usePathname();
   return (
     <Sidebar collapsible="offcanvas">
-      <SidebarHeader className="px-4 py-4">
-        <p className="font-semibold leading-tight">{t.console.brand}</p>
-        <p className="text-xs text-muted-foreground">{t.console.brandSub}</p>
+      <SidebarHeader className="flex-row items-center gap-3 px-4 py-4">
+        {/* The app icon, served by Next from src/app/icon.svg. SVG needs no optimizing. */}
+        <Image
+          src="/icon.svg"
+          alt=""
+          width={32}
+          height={32}
+          unoptimized
+          className="size-8 shrink-0"
+        />
+        <div className="min-w-0">
+          <p className="whitespace-nowrap text-[0.8125rem] font-semibold leading-tight">
+            {t.console.brand}
+          </p>
+          <p className="text-xs text-muted-foreground">{t.console.brandSub}</p>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -36,6 +49,7 @@ export function AppSidebar() {
                 <SidebarMenuItem key={href}>
                   <SidebarMenuButton
                     isActive={isActivePath(pathname, href)}
+                    className="data-active:bg-foreground/10 data-active:font-semibold"
                     render={<Link href={href} />}
                   >
                     <Icon />
@@ -60,7 +74,6 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   );
 }

@@ -1,6 +1,8 @@
 import { useSyncExternalStore } from "react";
 
-const MOBILE_BREAKPOINT = 768;
+// The sidebar becomes a sheet up to and including 1024 px (tablet), so the layout
+// switches at 1025 px. Keep in sync with the `min-[1025px]:` classes in ui/sidebar.tsx.
+const MOBILE_BREAKPOINT = 1025;
 const QUERY = `(max-width: ${MOBILE_BREAKPOINT - 1}px)`;
 
 function subscribe(onChange: () => void) {
@@ -9,7 +11,7 @@ function subscribe(onChange: () => void) {
   return () => mql.removeEventListener("change", onChange);
 }
 
-/** True below the `md` breakpoint. Server render and first paint report desktop. */
+/** True up to 1024 px (tablet and phone). Server render and first paint report desktop. */
 export function useIsMobile() {
   return useSyncExternalStore(
     subscribe,
