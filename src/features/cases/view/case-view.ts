@@ -51,7 +51,7 @@ export type CaseDetailRows = {
   } | null;
 };
 
-export type TimelineEntry = {
+type TimelineEntry = {
   id: number;
   step: string;
   status: EventStatus;

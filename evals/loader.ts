@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { evalCaseSchema, type EvalCase } from "./schema";
 
-export const DEFAULT_CASES_DIR = path.join(process.cwd(), "evals", "cases");
+const DEFAULT_CASES_DIR = path.join(process.cwd(), "evals", "cases");
 
 export class EvalCaseError extends Error {
   readonly code: "INVALID_CASE" | "FILENAME_MISMATCH";

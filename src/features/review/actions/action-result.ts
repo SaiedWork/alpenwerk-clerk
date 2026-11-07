@@ -2,7 +2,7 @@ import { ZodError } from "zod";
 import { logger } from "@/lib/logger";
 import { ReviewError, type reviewErrorCodes } from "../server/errors";
 
-export type ActionErrorCode =
+type ActionErrorCode =
   (typeof reviewErrorCodes)[number] | "INVALID_INPUT" | "UNKNOWN";
 
 export type ActionResult = { ok: true } | { ok: false; error: ActionErrorCode };

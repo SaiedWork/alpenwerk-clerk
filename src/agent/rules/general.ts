@@ -1,7 +1,7 @@
 import { ruleResult } from "./result";
 import type { RuleInput, RuleResult } from "./types";
 
-export const MIN_CONFIDENCE = 0.6;
+const MIN_CONFIDENCE = 0.6;
 
 /** Rules that do not belong to one intent. */
 export function generalRules(input: RuleInput): RuleResult[] {

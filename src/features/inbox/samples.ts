@@ -15,10 +15,10 @@ import { t } from "@/lib/i18n-de";
 import type { SimulatorEmail } from "./schemas/simulator";
 
 export const SAMPLE_GROUPS = ["auto", "reply", "review", "other"] as const;
-export type SampleGroup = (typeof SAMPLE_GROUPS)[number];
+type SampleGroup = (typeof SAMPLE_GROUPS)[number];
 
 /** An eval case id that has a German title and hint in the dictionary. */
-export type SampleId = keyof typeof t.console.inbox.samples;
+type SampleId = keyof typeof t.console.inbox.samples;
 
 export type Sample = {
   /** The eval case id, so the recorded model answer in `seed/llm-cache.json` matches the text. */

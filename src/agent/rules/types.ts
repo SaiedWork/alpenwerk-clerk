@@ -7,17 +7,16 @@ export type Decision = "AUTO_EXECUTE" | "NEEDS_REVIEW" | "REPLY_ONLY";
 
 export type Severity = "block" | "escalate" | "info";
 
-export type IdentifyRuleCode =
+type IdentifyRuleCode =
   | "ID_POLICY_NOT_FOUND"
   | "ID_NAME_MISMATCH"
   | "ID_DOB_MISMATCH"
   | "ID_POLICY_INACTIVE"
   | "ID_SENDER_UNKNOWN";
 
-export type AddressRuleCode =
-  "ADDR_INCOMPLETE" | "ADDR_PLZ_INVALID" | "ADDR_NON_DE";
+type AddressRuleCode = "ADDR_INCOMPLETE" | "ADDR_PLZ_INVALID" | "ADDR_NON_DE";
 
-export type BankRuleCode =
+type BankRuleCode =
   | "BANK_IBAN_INVALID"
   | "BANK_NON_DE"
   | "BANK_HOLDER_MISMATCH"
@@ -25,10 +24,10 @@ export type BankRuleCode =
   | "BANK_SAME_IBAN"
   | "BANK_RECENT_ADDRESS_CHANGE";
 
-export type TerminationRuleCode =
+type TerminationRuleCode =
   "TERM_ALWAYS_REVIEW" | "TERM_IRREVOCABLE_BENEFICIARY";
 
-export type GeneralRuleCode = "MULTI_INTENT_RISK" | "OTHER_INTENT";
+type GeneralRuleCode = "MULTI_INTENT_RISK" | "OTHER_INTENT";
 
 export type RuleCode =
   | IdentifyRuleCode

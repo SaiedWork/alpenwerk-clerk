@@ -25,7 +25,7 @@ export const RAW_TEXT_KEYS = [
   "policy-surrender-value",
   "policy-irrevocable",
 ] as const;
-export type RawTextKey = (typeof RAW_TEXT_KEYS)[number];
+type RawTextKey = (typeof RAW_TEXT_KEYS)[number];
 
 const STATUSES: readonly PolicyStatus[] = ["aktiv", "ruhend", "storniert"];
 const SALUTATIONS = new Set(["herr", "frau", "divers", "dr.", "prof."]);

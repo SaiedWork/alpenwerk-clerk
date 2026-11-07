@@ -3,13 +3,13 @@ import { PipelineStateError } from "@/agent/pipeline/state";
 import type { Step } from "@/agent/pipeline/types";
 import { planFromParams } from "./plan";
 
-export type VerifyErrorCode = "VERIFY_MISMATCH" | "VERIFY_UNAVAILABLE";
+type VerifyErrorCode = "VERIFY_MISMATCH" | "VERIFY_UNAVAILABLE";
 
 /**
  * The legacy system does not hold what was written. `fields` names what differs, never the
  * values, so it can be stored on the case without personal data.
  */
-export class VerifyError extends Error {
+class VerifyError extends Error {
   constructor(
     readonly code: VerifyErrorCode,
     message: string,

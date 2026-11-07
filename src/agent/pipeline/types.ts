@@ -114,7 +114,7 @@ export interface PipelineState {
   };
 }
 
-export interface StepContext {
+interface StepContext {
   case: PipelineCase;
   state: PipelineState;
   deps: PipelineDeps;
@@ -122,7 +122,7 @@ export interface StepContext {
 }
 
 /** `skipped` means "nothing to do, and that is fine"; it counts as done. */
-export interface StepResult {
+interface StepResult {
   status: "succeeded" | "skipped";
   /** Stored on the event row; later steps read their inputs from it. */
   payload: unknown;

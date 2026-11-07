@@ -39,7 +39,7 @@ export async function hitRateLimit(options: {
 }
 
 /** One-time claims use a single fixed window, so a key can never slip through a boundary. */
-export const ONCE_WINDOW_START = new Date(0);
+const ONCE_WINDOW_START = new Date(0);
 
 /** `true` for the first caller with this key, `false` for every later one (atomic). */
 export async function claimOnce(

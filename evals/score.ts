@@ -4,7 +4,7 @@ import { namesMatch, normalizeText } from "@/lib/normalize";
 import type { EvalCase, ExpectedFields } from "./schema";
 
 /** First stage at which a case went wrong; later stages are usually consequences of it. */
-export type Divergence =
+type Divergence =
   "no_extraction" | "intent" | "fields" | "decision" | "reasonCodes";
 
 export interface CaseResult {

@@ -38,7 +38,7 @@ export type AddressInput = z.infer<typeof addressFormSchema>;
 export type BankInput = z.infer<typeof bankFormSchema>;
 
 /** Names of the form fields that can be reported back as invalid. */
-export const formFields = [
+const formFields = [
   "strasse",
   "hausnr",
   "plz",

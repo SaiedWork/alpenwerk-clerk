@@ -4,13 +4,8 @@ import {
   type SimulatorEmail,
 } from "../schemas/simulator";
 
-export const submitErrorCodes = [
-  "INVALID_INPUT",
-  "RATE_LIMIT_DAILY",
-  "RATE_LIMIT_LIVE",
-  "LIVE_DISABLED",
-] as const;
-export type SubmitErrorCode = (typeof submitErrorCodes)[number];
+export type SubmitErrorCode =
+  "INVALID_INPUT" | "RATE_LIMIT_DAILY" | "RATE_LIMIT_LIVE" | "LIVE_DISABLED";
 
 export type SubmitResult =
   | { ok: true; caseId: string }

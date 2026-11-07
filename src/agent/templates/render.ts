@@ -13,13 +13,7 @@ const text = z
 /** Only a masked IBAN (`DE89 **** **** **** **** 00`) may reach a reply. */
 const maskedIban = z.string().regex(/^[A-Z]{2}\d{2}( \*{4})+ \d{2}$/);
 
-export const MISSING_FIELDS = [
-  "street",
-  "house_no",
-  "plz",
-  "city",
-  "iban",
-] as const;
+const MISSING_FIELDS = ["street", "house_no", "plz", "city", "iban"] as const;
 export type MissingField = (typeof MISSING_FIELDS)[number];
 
 const schemas = {

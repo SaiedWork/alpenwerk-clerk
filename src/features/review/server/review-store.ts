@@ -1,6 +1,6 @@
 import type { CaseStatus } from "@/agent/pipeline/types";
 
-export type DecideResult = "ok" | "not_found" | "not_awaiting";
+type DecideResult = "ok" | "not_found" | "not_awaiting";
 
 /** Persistence port of the review gate. The Drizzle version is in `db-review-store.ts`. */
 export interface ReviewStore {

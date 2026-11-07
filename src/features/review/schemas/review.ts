@@ -12,5 +12,3 @@ export const reviewInputSchema = z.strictObject({
     .transform((s) => s ?? null),
   reviewerLabel: z.string().trim().min(1).max(60),
 });
-
-export type ReviewInput = z.infer<typeof reviewInputSchema>;

@@ -10,7 +10,7 @@ import type { Extraction } from "./schema";
 import { wireSchema, wireToExtraction } from "./wire";
 
 /** Per-step timeout for the live call (HANDOFF §7). */
-export const LLM_TIMEOUT_MS = 20_000;
+const LLM_TIMEOUT_MS = 20_000;
 
 export interface ExtractResult {
   extraction: Extraction;

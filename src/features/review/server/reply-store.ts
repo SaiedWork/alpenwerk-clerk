@@ -1,5 +1,5 @@
-export type EditResult = "ok" | "no_reply" | "not_draft";
-export type SendResult =
+type EditResult = "ok" | "no_reply" | "not_draft";
+type SendResult =
   "ok" | "case_not_found" | "not_ready" | "no_reply" | "not_draft";
 
 /** Persistence port of the reply actions. The Drizzle version is in `db-reply-store.ts`. */

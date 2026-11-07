@@ -28,7 +28,7 @@ import { snapshotFromFixture } from "./snapshot";
  * relative to `now`, like the legacy fixtures.
  */
 
-export type DemoEvent = {
+type DemoEvent = {
   seq: number;
   step: string;
   status: EventStatus;
@@ -37,7 +37,7 @@ export type DemoEvent = {
   durationMs: number;
 };
 
-export type DemoAudit = {
+type DemoAudit = {
   actor: "agent" | "human" | "system";
   action: string;
   details: NonNullable<AuditEntry["details"]>;

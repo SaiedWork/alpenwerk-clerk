@@ -17,7 +17,7 @@ export type ChangeOutcome =
   | { outcome: "no-mandate" };
 
 /** Same text format as the seeded log entries, so history reads consistently. */
-export function formatAddress(a: AddressInput): string {
+function formatAddress(a: AddressInput): string {
   const base = `${a.strasse} ${a.hausnr}, ${a.plz} ${a.ort}`;
   return a.land.toLowerCase() === "deutschland" ? base : `${base}, ${a.land}`;
 }

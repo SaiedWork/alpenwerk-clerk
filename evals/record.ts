@@ -4,7 +4,7 @@ import { estimateCostUsd } from "@/agent/llm/pricing";
 import type { SeedCacheEntry } from "@/agent/llm/seed-file";
 import type { EvalCase } from "./schema";
 
-export interface RecordStats {
+interface RecordStats {
   calls: number;
   skipped: number;
   tokensIn: number;
