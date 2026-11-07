@@ -3,7 +3,7 @@
 // official Anthropic pricing page before every go-live and update this table if needed.
 
 /** Date these prices were last checked against Anthropic's published prices. */
-export const PRICES_CHECKED_ON = "2026-10-06";
+export const PRICES_CHECKED_ON = "2026-11-07";
 
 /** USD per million tokens, for prompts up to 100K tokens (demo emails are far below that). */
 const PRICE_PER_MTOK: Record<string, { input: number; output: number }> = {
