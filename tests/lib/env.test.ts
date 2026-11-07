@@ -9,6 +9,12 @@ describe("parseEnv", () => {
     expect(env.ANTHROPIC_MODEL).toBe("claude-haiku-5-5");
   });
 
+  it("defaults the visitor limits to 30 submits/day and 10 live runs/hour", () => {
+    const env = parseEnv({});
+    expect(env.RATE_LIMIT_SUBMIT_PER_DAY).toBe(30);
+    expect(env.RATE_LIMIT_LIVE_PER_HOUR).toBe(10);
+  });
+
   it("coerces numeric strings", () => {
     expect(parseEnv({ LLM_DAILY_CALL_CAP: "42" }).LLM_DAILY_CALL_CAP).toBe(42);
   });
