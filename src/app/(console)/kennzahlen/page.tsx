@@ -7,11 +7,14 @@ import {
   BarChartCard,
   type BarDatum,
 } from "@/features/kpi/components/bar-chart-card";
+import { EvalBadge } from "@/features/kpi/components/eval-badge";
+import { parseEvalSummary } from "@/features/kpi/server/eval-summary";
 import { loadKpis } from "@/features/kpi/server/load-kpis";
 import { summarizeKpis } from "@/features/kpi/view/kpi";
 import { formatHandlingTime } from "@/features/cases/format";
 import { env } from "@/lib/env";
 import { t } from "@/lib/i18n-de";
+import evalSummaryJson from "../../../../public/eval-summary.json";
 
 const k = t.console.kpi;
 
@@ -118,6 +121,8 @@ export default async function KpiPage() {
           <BarChartCard title={k.charts.status} data={statusData} />
         </div>
       </div>
+
+      <EvalBadge summary={parseEvalSummary(evalSummaryJson)} />
     </div>
   );
 }

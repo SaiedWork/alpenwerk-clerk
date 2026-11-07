@@ -11,6 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "eval": "vitest run evals/run.test.ts --silent=false",
+    "eval:summary": "LOG_LEVEL=silent tsx --tsconfig tsconfig.json scripts/eval-summary.mts",
     "eval:live": "tsx --tsconfig tsconfig.json --env-file-if-exists=.env.local scripts/eval-live.mts",
     "seed-cache": "tsx --tsconfig tsconfig.json --env-file-if-exists=.env.local scripts/seed-cache.mts",
     "format": "prettier --write src tests e2e evals seed scripts *.json *.ts *.mts *.mjs CLAUDE.md",

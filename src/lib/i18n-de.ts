@@ -541,6 +541,15 @@ export const t = {
         noDecision: "Noch offen",
         noIntent: "Nicht erkannt",
       },
+      eval: {
+        title: "Qualität: Eval mit aufgezeichneten Antworten",
+        summary: "{correct} von {cases} Beispiel-E-Mails vollständig richtig",
+        intent: "Anliegen erkannt",
+        fields: "Felder richtig gelesen",
+        decision: "Entscheidung",
+        reasonCodes: "Regelcodes",
+        note: "Stand des letzten CI-Laufs. Modell {models}, Prompt-Version {prompt}. Die Regeln wurden an diesen Fällen entwickelt, die Werte sind daher keine unabhängige Schätzung.",
+      },
     },
     audit: {
       title: "Audit",

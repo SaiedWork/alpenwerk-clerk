@@ -1,0 +1,17 @@
+{
+  "cases": 24,
+  "allCorrect": 24,
+  "errors": 0,
+  "promptVersion": "2",
+  "schemaVersion": "1",
+  "models": [
+    "claude-haiku-5-5"
+  ],
+  "metrics": {
+    "intent": 1,
+    "intents": 1,
+    "fields": 1,
+    "decision": 1,
+    "reasonCodes": 1
+  }
+}
