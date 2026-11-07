@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { BarChart3 } from "lucide-react";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
@@ -27,6 +28,8 @@ const usd = new Intl.NumberFormat("de-DE", {
 });
 
 // Reads the database on every request; without this Next would prerender it at build time.
+export const metadata: Metadata = { title: t.console.nav.kpi };
+
 export const dynamic = "force-dynamic";
 
 export default async function KpiPage() {

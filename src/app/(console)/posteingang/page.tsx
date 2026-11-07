@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Panel } from "@/components/shared/panel";
 import { PageHeader } from "@/components/shared/page-header";
 import { createDbStores } from "@/agent/llm/stores";
@@ -9,6 +10,8 @@ import { t } from "@/lib/i18n-de";
 import { logger } from "@/lib/logger";
 
 // The live budget changes all day, so never prerender this page.
+export const metadata: Metadata = { title: t.console.nav.inbox };
+
 export const dynamic = "force-dynamic";
 
 // The submit action starts the pipeline in `after()`, so it needs the full function time.

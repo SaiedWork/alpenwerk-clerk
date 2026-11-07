@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { UserCheck } from "lucide-react";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
@@ -7,6 +8,8 @@ import { listReviewQueue } from "@/features/review/server/list-review-queue";
 import { t } from "@/lib/i18n-de";
 
 // Reads the database on every request; without this Next would prerender it at build time.
+export const metadata: Metadata = { title: t.console.nav.reviews };
+
 export const dynamic = "force-dynamic";
 
 export default async function ReviewQueuePage() {

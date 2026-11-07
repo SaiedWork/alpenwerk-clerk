@@ -224,6 +224,8 @@ export const t = {
   console: {
     brand: "Alpenwerk Digital Clerk",
     brandSub: "Digitale Sachbearbeiterin",
+    metaDescription:
+      "Demo einer digitalen Sachbearbeiterin für eine fiktive Lebensversicherung, mit synthetischen Daten.",
     navLabel: "Navigation",
     openMenu: "Menü öffnen",
     banner: "Demo mit synthetischen Daten. Daten werden täglich zurückgesetzt.",

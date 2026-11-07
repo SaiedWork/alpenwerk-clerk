@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { FolderOpen, SearchX } from "lucide-react";
 import Link from "next/link";
 import { AutoRefresh } from "@/components/shared/auto-refresh";
@@ -18,6 +19,8 @@ import { t } from "@/lib/i18n-de";
 type Props = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
+
+export const metadata: Metadata = { title: t.console.nav.cases };
 
 export default async function CasesPage({ searchParams }: Props) {
   const query = parseCasesQuery(await searchParams);
