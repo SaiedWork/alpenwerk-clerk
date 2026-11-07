@@ -27,6 +27,10 @@ pnpm e2e         # Playwright smoke test (B01 end to end); RESETS the database i
 
 Node 22+ and pnpm are required. Add new scripts here when they are introduced.
 
+## Docs
+
+`README.md` (overview, rules, eval result, quickstart), `docs/five-minute-guide.md`, `docs/architecture.md`, `docs/decisions.md` (decision log; add an entry when a design decision is made). Screenshots are in `docs/img/`. Licensed MIT.
+
 ## Stack
 
 Next.js (App Router, `src/` dir), React, TypeScript strict, Tailwind 4, shadcn/ui (`base-nova` style, Base UI primitives,
